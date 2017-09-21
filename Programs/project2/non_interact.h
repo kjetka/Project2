@@ -7,9 +7,22 @@ class Non_interact
 {
 public:
     Non_interact();
-    double test(double masse);
-
     mat matrise(mat V, int n);
+    double off(mat A);
+
+private:
+
+
+
+
+
+
+
+
+
 };
 
 #endif // NON_INTERACT_H
+
+
+
