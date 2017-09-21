@@ -21,17 +21,34 @@ mat Non_interact::matrise(mat V, int n)
 
 }
 
-double Non_interact::off(mat A){
-    double verdi=0;
+double Non_interact::norm_off_diag(mat A, int k, int l){
+    double max_akl =0;
     int n = size(A)[0];
+    cout << "A must be symmetric, should we test it?"<<endl;
+
+    for(int i = 0; i<n;i++){
+        for(int j=i+1; j<n; j++){
+           double aij = fabs(A(i,j));
+            if(aij > max_akl){
+                max_akl = aij;
+                k = i; l = j;
+            }
+        }
+    }
+    return max_akl;
+    /*
+    double off_A_verdi=0;
     for(int i=0;i<n;i++){
         for(int j=0; j<n;j++){
             if(j!=i)
-                verdi += A(i,j);
+                off_A_verdi += A(i,j);
+
 
         }
     }
+    off_A_verdi = sqrt(off_A_verdi);
 
-    return verdi;
+    return off_A_verdi;
+    */
 
 }

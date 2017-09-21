@@ -8,7 +8,7 @@ class Non_interact
 public:
     Non_interact();
     mat matrise(mat V, int n);
-    double off(mat A);
+    double norm_off_diag(mat A, int k, int l);
 
 private:
 

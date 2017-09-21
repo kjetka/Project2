@@ -17,13 +17,14 @@ int main()
 {
 
 int N = 4;
-mat V = ones<vec>(N);
+mat V = ones<vec>(N); // potential
+V[2] = 10;
+mat R = zeros<mat>(N,N);
 mat A = ni.matrise(V,N);
-double tall = ni.off(A);
-cout <<tall<<endl;
 A.print();
-
-
+int k; int l;
+double max_ = ni.norm_off_diag( A, k, l);
+cout << max_<<endl;
 
 
 
