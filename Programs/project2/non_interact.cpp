@@ -1,13 +1,52 @@
 #include "non_interact.h"
 #include <cmath>
 #include <armadillo>
-
+#include <iostream>
 
 
 Non_interact::Non_interact() {
+    //this->N = N;
 }
 
+void Non_interact::Jacobi_func(int N){
+    double tol = 1e-10;
+    int k=10; int l=10;
+    int iterations = 0;
+    double max_ = 10;
+    int max_interations = N*10;
+    mat V = ones<vec>(N); // potential
 
+    mat R, A;
+    matrise(V, N, R, A);
+
+    while(max_ > tol && iterations < max_interations){
+        max_ = norm_off_diag( A, k, l, N);
+        A = Jacobi_rot(A,R, k,l, N);
+        iterations +=1;
+    }
+
+    cout << "Iterations: "<<iterations << endl;
+
+    cout << "results:"<<endl;
+    A.print("A");
+    R.print("R");
+
+
+/*
+    for(k=0; k<N;k++){
+        if(A(i,i) < lambda(k)){
+            lambda(k) = A(i,i);
+            eigenvec_coloumn(k) = i;
+        }
+        if(A(i,i)< lambda_2 && A(i,i) > lambda_1)
+
+}
+*/
+/*
+void Non_interact::print_to_file(int iterations, int N, double time){
+
+}
+*/
 void Non_interact::matrise(mat V, int n, mat& R, mat &A)
 {
     A = zeros<mat>(n,n);
@@ -25,8 +64,6 @@ void Non_interact::matrise(mat V, int n, mat& R, mat &A)
 
     return;
 }
-
-
 
 double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
     double max_a_kl =0;
