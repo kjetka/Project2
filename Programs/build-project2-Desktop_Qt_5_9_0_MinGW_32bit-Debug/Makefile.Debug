@@ -17,7 +17,7 @@ CXXFLAGS      = -fno-keep-inline-dllexport -pipe -g -std=gnu++11 -Wextra -Wall -
 INCPATH       = -I..\project2 -I. -I..\..\..\..\armadillo-8.100.1\include -IC:\Qt\5.9\mingw53_32\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-subsystem,console -mthreads
-LIBS        =        -L\usr\local\lib -larmadillo -llapack -lblas 
+LIBS        =         
 QMAKE         = C:\Qt\5.9\mingw53_32\bin\qmake.exe
 IDC           = idc
 IDL           = midl

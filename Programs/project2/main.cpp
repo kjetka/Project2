@@ -6,46 +6,21 @@
 #include <fstream>
 #include <time.h>
 #include <iomanip>
+#include <iostream>
 
 using namespace std;
 using namespace arma;
 
-Non_interact ni;
 
+ofstream outfile;
 
 int main(){
 
+    Non_interact* ni;
 
-double tol = 1e-10;
-int k=10; int l=10;
-int iterations = 0;
-double max_ = 10;
+    ni = new Non_interact(2);
 
-
-int N = 2;
-mat V = ones<vec>(N); // potential
-
-mat R, A;
-ni.matrise(V,N, R, A);
-
-
-
-
-while(max_ > tol && iterations < 10){
-    max_ = ni.norm_off_diag( A, k, l, N);
-    A = ni.Jacobi_rot(A,R, k,l, N);
-    iterations +=1;
-}
-
-cout << "Iterations: "<<iterations << endl;
-
-cout << "results:"<<endl;
-A.print("A");
-R.print("R");
-
-
-
-
+ni->Jacobi_func(2);
 
 
 cout << "A must be symmetric, should we test it?"<<endl;

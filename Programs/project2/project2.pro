@@ -11,7 +11,7 @@ HEADERS += \
 
 INCLUDEPATH += D:\armadillo-8.100.1/include
 
-/*INCLUDEPATH += /usr/local/include
-LIBS += -L/usr/local/lib
-LIBS += -larmadillo -llapack -lblas
-*/
+#INCLUDEPATH += /usr/local/include
+#LIBS += -L/usr/local/lib
+#LIBS += -larmadillo -llapack -lblas
+
