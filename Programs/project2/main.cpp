@@ -13,27 +13,32 @@ using namespace arma;
 Non_interact ni;
 
 
-int main()
-{
+int main(){
 
-int N = 2;
-mat V = ones<vec>(N); // potential
-mat R = ones<mat>(N,N);
-mat A = ni.matrise(V,N);
 
 double tol = 1e-10;
-int k; int l;
+int k=10; int l=10;
 int iterations = 0;
 double max_ = 10;
 
-while(max_ > tol && iterations < 2){
-    max_ = ni.norm_off_diag( A, k, l);
-    A,R = ni.Jacobi_rot(A,R, k,l);
+
+int N = 2;
+mat V = ones<vec>(N); // potential
+
+mat R = ones<mat>(N,N);
+mat A = ni.matrise(V,N);
+
+while(max_ > tol && iterations < 3){
+    max_ = ni.norm_off_diag( A, k, l, N);
+    A = ni.Jacobi_rot(A,R, k,l, N);
     iterations +=1;
     cout << iterations << endl;
 
 }
-A.print();
+
+cout << "results"<<endl;
+A.print("A");
+R.print("R");
 
 
 cout << "Problem: A,R will not return properly from Jacobi_rot!!!!!!!!!!!"<<endl;
