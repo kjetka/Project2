@@ -33,12 +33,14 @@ void Non_interact::Jacobi_func(int N){
 
     mat eigenvalues = ones<vec>(N);
     mat eigenvectors = ones<mat>(N,N);
-    mat eigenindex = ones<vec>(N);
 
         for(int i=0;i<N;i++){
             eigenvalues(i) = A(i,i);
         }
-        eigenindex = sort_index(eigenvalues);
+        eigenvalues.print("lambda");
+
+       uvec eigenindex =  sort_index(eigenvalues);
+
         eigenvalues = sort(eigenvalues);
         for(int j=0;j<N;j++){
             eigenvectors.col(j) = R.col(eigenindex(j));
