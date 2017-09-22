@@ -31,22 +31,23 @@ void Non_interact::Jacobi_func(int N){
     A.print("A");
     R.print("R");
 
+    mat eigenvalues = ones<vec>(N);
+    mat eigenvectors = ones<mat>(N,N);
+    mat eigenindex = ones<vec>(N);
 
-/*
-    for(k=0; k<N;k++){
-        if(A(i,i) < lambda(k)){
-            lambda(k) = A(i,i);
-            eigenvec_coloumn(k) = i;
+        for(int i=0;i<N;i++){
+            eigenvalues(i) = A(i,i);
         }
-        if(A(i,i)< lambda_2 && A(i,i) > lambda_1)
-
+        eigenindex = sort_index(eigenvalues);
+        eigenvalues = sort(eigenvalues);
+        for(int j=0;j<N;j++){
+            eigenvectors(j,:) = R(eigenindex(j));
+        }
 }
-*/
 /*
 void Non_interact::print_to_file(int iterations, int N, double time){
-*/
 }
-
+*/
 void Non_interact::matrise(mat V, int n, mat& R, mat &A){
     A = zeros<mat>(n,n);
     for (int i=0; i<n; i++) {
@@ -78,21 +79,6 @@ double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
         }
     }
     return pow(max_a_kl,2);
-
-    /*
-    double off_A_verdi=0;
-    for(int i=0;i<n;i++){
-        for(int j=0; j<n;j++){
-            if(j!=i)
-                off_A_verdi += A(i,j);
-
-
-        }
-    }
-    off_A_verdi = sqrt(off_A_verdi);
-
-    return off_A_verdi;
-    */
 
 }
 
