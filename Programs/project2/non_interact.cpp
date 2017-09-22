@@ -44,11 +44,10 @@ void Non_interact::Jacobi_func(int N){
 */
 /*
 void Non_interact::print_to_file(int iterations, int N, double time){
-
-}
 */
-void Non_interact::matrise(mat V, int n, mat& R, mat &A)
-{
+}
+
+void Non_interact::matrise(mat V, int n, mat& R, mat &A){
     A = zeros<mat>(n,n);
     for (int i=0; i<n; i++) {
         A(i,i)=2 + V[i];
