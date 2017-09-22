@@ -7,10 +7,13 @@ class Non_interact
 {
 public:
     Non_interact();
-    mat matrise(mat V, int n);
-    double norm_off_diag(mat A, int k, int l);
+    void matrise(mat V, int n, mat& R, mat& A);
+    double norm_off_diag(mat& A, int& k, int& l, int n);
 
-    mat Jacobi_rot(mat A, mat R, int k, int l);
+    mat Jacobi_rot(mat& A, mat& R, int k, int l, int n);
+
+
+
 
 
 private:
