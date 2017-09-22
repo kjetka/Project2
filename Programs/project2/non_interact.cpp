@@ -41,7 +41,7 @@ void Non_interact::Jacobi_func(int N){
         eigenindex = sort_index(eigenvalues);
         eigenvalues = sort(eigenvalues);
         for(int j=0;j<N;j++){
-            eigenvectors(j,:) = R(eigenindex(j));
+            eigenvectors.col(j) = R.col(eigenindex(j));
         }
 }
 /*
