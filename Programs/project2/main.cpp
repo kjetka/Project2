@@ -18,9 +18,14 @@ int main(){
 
     Non_interact* ni;
 
-    ni = new Non_interact(2);
+    //ni = new Non_interact(2);
 
-ni->Jacobi_func(2);
+
+    mat B = ones<vec>(3);
+    B(0) = 3; B(2) = 0;
+    B.print("B");
+    cout << sort(B)<<endl;
+//ni->Jacobi_func(2);
 
 
 cout << "A must be symmetric, should we test it?"<<endl;
