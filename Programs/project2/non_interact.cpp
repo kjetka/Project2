@@ -65,7 +65,7 @@ mat Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
      if(a_kl != 0.0){
         tau = (a_ll-a_kk)/(2.0*a_kl);
         if(tau>= 0){
-             t = -tau + sqrt(1+pow(tau,2));
+             t = tau + sqrt(1+pow(tau,2));
         }
         else{
              t = -tau - sqrt(1+pow(tau,2));
@@ -94,8 +94,6 @@ mat Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
              A(i,l) = c*a_il + s*a_ik;
              A(l,i) = A(i,l);
          }
-         cout << "  =========== " <<endl;
-         A.print();
          r_ik = R(i,k);
          r_il = R(i,l);
          R(i,k) = c*r_ik - s*r_il;

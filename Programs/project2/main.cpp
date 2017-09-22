@@ -27,28 +27,27 @@ mat V = ones<vec>(N); // potential
 
 mat R = ones<mat>(N,N);
 mat A = ni.matrise(V,N);
+A.print("A");
 
-while(max_ > tol && iterations < 3){
+while(max_ > tol && iterations < 10){
     max_ = ni.norm_off_diag( A, k, l, N);
+    cout<< max_<<endl;
     A = ni.Jacobi_rot(A,R, k,l, N);
     iterations +=1;
-    cout << iterations << endl;
-
 }
 
-cout << "results"<<endl;
+cout << "Iterations: "<<iterations << endl;
+
+cout << "results:"<<endl;
 A.print("A");
 R.print("R");
 
 
-cout << "Problem: A,R will not return properly from Jacobi_rot!!!!!!!!!!!"<<endl;
 
 
 
 
 cout << "A must be symmetric, should we test it?"<<endl;
-cout << "minor adjust: remove finding n in every function..."<<endl;
-
 cout << "Why t+ for tau >0 and t- for tau < 0?"<< endl;
 
 
