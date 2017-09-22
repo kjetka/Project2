@@ -52,8 +52,8 @@ void Non_interact::matrise(mat V, int n, mat& R, mat &A)
     A = zeros<mat>(n,n);
     for (int i=0; i<n; i++) {
         A(i,i)=2 + V[i];
-        if (i!=n-1) A(i,i+1) = 1;
-        if (i!=n-1) A(i+1,i) = 1;
+        if (i!=n-1) A(i,i+1) = -1;
+        if (i!=n-1) A(i+1,i) = -1;
 }
     R = zeros<mat>(n,n);
     for (int i =0;i<n;i++){
