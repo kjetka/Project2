@@ -22,16 +22,9 @@ int main(){
 
 
     mat B = ones<vec>(3);
-    B(1) = 3; B(2) = 0;
-    B.print();
-    cout<< "-------"<<endl;
-    cout << sort_index(B)<<endl;
-    /*
-    for(int i=0;i<3;i++){
-        int j = sort_index(B)[i];
-        cout<< B(j)<<endl;
-    }*/
-
+    B(0) = 3; B(2) = 0;
+    B.print("B");
+    cout << sort(B)<<endl;
 //ni->Jacobi_func(2);
 
 
