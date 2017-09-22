@@ -25,13 +25,14 @@ double max_ = 10;
 int N = 2;
 mat V = ones<vec>(N); // potential
 
-mat R = ones<mat>(N,N);
-mat A = ni.matrise(V,N);
-A.print("A");
+mat R, A;
+ni.matrise(V,N, R, A);
+
+
+
 
 while(max_ > tol && iterations < 10){
     max_ = ni.norm_off_diag( A, k, l, N);
-    cout<< max_<<endl;
     A = ni.Jacobi_rot(A,R, k,l, N);
     iterations +=1;
 }
@@ -49,7 +50,6 @@ R.print("R");
 
 cout << "A must be symmetric, should we test it?"<<endl;
 cout << "Why t+ for tau >0 and t- for tau < 0?"<< endl;
-
 
 
 

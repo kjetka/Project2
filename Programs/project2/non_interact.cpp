@@ -8,16 +8,22 @@ Non_interact::Non_interact() {
 }
 
 
-mat Non_interact::matrise(mat V, int n)
+void Non_interact::matrise(mat V, int n, mat& R, mat &A)
 {
-    mat A_ = zeros<mat>(n,n);
+    A = zeros<mat>(n,n);
     for (int i=0; i<n; i++) {
-        A_(i,i)=2 + V[i];
-        if (i!=n-1) A_(i,i+1) = 1;
-        if (i!=n-1) A_(i+1,i) = 1;
+        A(i,i)=2 + V[i];
+        if (i!=n-1) A(i,i+1) = 1;
+        if (i!=n-1) A(i+1,i) = 1;
 }
+    R = zeros<mat>(n,n);
+    for (int i =0;i<n;i++){
+        for (int j =0;j<n;j++){
+            if(i==j) R(i,j) = 1;
+        }
+    }
 
-    return A_;
+    return;
 }
 
 
@@ -65,12 +71,13 @@ mat Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
      if(a_kl != 0.0){
         tau = (a_ll-a_kk)/(2.0*a_kl);
         if(tau>= 0){
-             t = tau + sqrt(1+pow(tau,2));
+             t = 1.0/(tau + sqrt(1+tau*tau));
         }
         else{
-             t = -tau - sqrt(1+pow(tau,2));
+            t = -1.0/(- tau + sqrt(1+tau*tau));
         }
-         c = 1.0/(    sqrt(1  +   pow(t,2))   );
+
+         c = 1.0/(    sqrt(1  +  t*t)   );
          s = t*c;
      }
      else{
@@ -82,7 +89,7 @@ mat Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
 
      A(k,k) = cc * a_kk -2.0*cs*a_kl + ss*a_ll;
      A(l,l) = ss*a_kk + 2.0*cs*a_kl + cc*a_ll;
-     A(k,l) = 0.0; A(l,l) = 0.0;
+     A(k,l) = 0.0; A(l,k) = 0.0;
      cout <<A(k,k)<<endl;
 
      for(int i=0;i<n; i++){
