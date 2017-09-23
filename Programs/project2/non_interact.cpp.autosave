@@ -31,6 +31,7 @@ cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< ener
 outfile.close();
 
 }
+void Non_interact::Jacobi(mat A, )
 
 void Non_interact::Jacobi_func(int N, mat& energy, int& iterations, double& time, double rho_max){
     double tol = 1e-6;

@@ -7,24 +7,25 @@
 #include <time.h>
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 using namespace arma;
-
-
-ofstream outfile;
 
 int main(){
 
     Non_interact* ni;
 
-    ni = new Non_interact();
+    double rho_max = 1.0;
 
-ni->Jacobi_func(2);
+    ni = new Non_interact(rho_max);
+
+    ni->write_to_file();
+
+    //ni->Jacobi_func(3);
 
 
 cout << "A must be symmetric, should we test it?"<<endl;
-cout << "Why t+ for tau >0 and t- for tau < 0?"<< endl;
 
 
 
