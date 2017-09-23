@@ -12,7 +12,7 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     double eps = pow(10,-5);
     int iterations = 0;
-    int N = 3;
+    int n = 3;
     double time;
 
     outfile.open("result.txt");
@@ -20,75 +20,71 @@ void Non_interact::write_to_file(){
 
     while(abs(energy(0) - known_values(0)) > eps &&
         abs(energy(1) - known_values(1)) > eps &&
-        abs(energy(2) - known_values(2)) >eps && N < 20){
-        Jacobi_func(N, energy, iterations, time, rho_max);
-        outfile << N << "    " << iterations << "    " << time << endl;
-        N +=1;
+        abs(energy(2) - known_values(2)) >eps && n < 10000){
+        Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
+        outfile << n << "    " << iterations << "    " << time << endl;
+        n +=1;
 }
-N = N-1;
-cout << N << " mesh points were necassary to get four decimal points." << endl;
+n = n-1;
+cout << n << " mesh points were necassary to get four decimal points." << endl;
 cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
 outfile.close();
 
 }
-void Non_interact::Jacobi(mat A, )
 
-void Non_interact::Jacobi_func(int N, mat& energy, int& iterations, double& time, double rho_max){
-    double tol = 1e-6;
+void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
+    double tol = 1e-10;
     int k=10; int l=10;
     double max_ = 10;
-    int max_iterations = N*100;
+    int max_iterations = n*1000;
 
-    mat R, A;
-    matrise(rho_max, N, R, A);
-
-    while(max_ > tol && iterations < max_iterations){
-        max_ = norm_off_diag( A, k, l, N);
-        A = Jacobi_rot(A,R, k,l, N);
-        iterations +=1;
-    }
-    /*
-    mat printA = A;
-    for(int i = 0; i<N;i++){
-        for(int j = 0; j<N;j++){
-            if(i != j && printA(i,j) <= tol){
-                printA(i,j)= 0;
-           }
+    R = zeros<mat>(n,n);
+    for (int i =0;i<n;i++){
+        for (int j =0;j<n;j++){
+            if(i==j) R(i,j) = 1;
         }
     }
 
-   if(N==50){
-       printA.print("A");
-       cout << "iterations: " << iterations << endl;
-   }
-*/
+    while(max_ > tol && iterations < max_iterations){
+        max_ = norm_off_diag( A, k, l, n);
+        A = Jacobi_rot(A,R, k,l, n);
+        iterations +=1;
+    }
+
     iterations = iterations-1;
 
+}
+
+void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time, double rho_max){
+    mat R, A;
+    make_A(n, rho_max, A);
     //cout << "results:"<<endl;
     //A.print("A");
     //R.print("R");
+    Jacobi(A, R, n, iterations);
+//    A.print();
+    mat eigenvalues = ones<vec>(n);
+    mat eigenvectors = ones<mat>(n,n);
 
-    mat eigenvalues = ones<vec>(N);
-    mat eigenvectors = ones<mat>(N,N);
-
-        for(int i=0;i<N;i++){
+        for(int i=0;i<n;i++){
             eigenvalues(i) = A(i,i);
         }
-        eigenvalues.print("lambda");
+//        eigenvalues.print("lambda");
 
         uvec eigenindex =  sort_index(eigenvalues);
 
         eigenvalues = sort(eigenvalues);
-        for(int j=0;j<N;j++){
+        for(int j=0;j<n;j++){
             eigenvectors.col(j) = R.col(eigenindex(j));
         }
         energy(0) = eigenvalues(0);
         energy(1) = eigenvalues(1);
         energy(2) = eigenvalues(2);
         time = 8.0;
+
 }
 
-void Non_interact::matrise(double rho_max, int n, mat& R, mat &A){
+void Non_interact::make_A(int n, double rho_max, mat& A){
     A = zeros<mat>(n,n);
 
     mat V = ones<vec>(n); // potential
@@ -106,13 +102,6 @@ void Non_interact::matrise(double rho_max, int n, mat& R, mat &A){
         if (i!=n-1) A(i,i+1) = -1.0/(double)(h*h);
         if (i!=n-1) A(i+1,i) = -1.0/(double)(h*h);
 }
-    R = zeros<mat>(n,n);
-    for (int i =0;i<n;i++){
-        for (int j =0;j<n;j++){
-            if(i==j) R(i,j) = 1;
-        }
-    }
-
     return;
 }
 
@@ -179,20 +168,18 @@ mat Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
          R(i,k) = c*r_ik - s*r_il;
          R(i,l) = c*r_il + s*r_ik;
      }
-
-
             return A;
 
 }
 
-void Non_interact::test_eigensolver(){
-    mat B = {{3,1},{1,3}};
-    int iterations;
-    double time;
-    double rho_max;
-    mat eigenvalues;
-    B.print();
-    Jacobi_func(2, eigenvalues, iterations , time, rho_max);
-    eigenvalues.print("Test eigenvalues");
+int Non_interact::test_eigensolver(){
+    mat A = {{3,1},{1,3}};
+    mat R;
+    int iterations = 1;
+    A.print("Test matrix");
+    Jacobi(A, R, 2, iterations);
+//    A.print("Eigenvalues:");
+//    R.print("Eigenvectors:");
+    if (abs(A(1,1)- 2.0) <
 }
 

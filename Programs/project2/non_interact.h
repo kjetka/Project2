@@ -14,12 +14,13 @@ public:
     Non_interact(double rho_max);
 
 
-    void matrise(double rho_max, int n, mat& R, mat& A);
     double norm_off_diag(mat& A, int& k, int& l, int n);
     void write_to_file();
     mat Jacobi_rot(mat& A, mat& R, int k, int l, int n);
-    void Jacobi_func(int N, mat& energy, int &iterations, double& time, double rho_max);
-    void test_eigensolver();
+    void Solve_SE_twoparticle(int n, mat& energy, int &iterations, double& time, double rho_max);
+    int test_eigensolver();
+    void make_A(int n, double max_rho, mat& A);
+    void Jacobi(mat& A, mat& R, int n, int& iterations);
 private:
     int rho_max = 1;
 
