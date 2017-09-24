@@ -16,7 +16,7 @@ public:
 
     double norm_off_diag(mat& A, int& k, int& l, int n);
     void write_to_file();
-    mat Jacobi_rot(mat& A, mat& R, int k, int l, int n);
+    void Jacobi_rot(mat& A, mat& R, int k, int l, int n);
     void Solve_SE_twoparticle(int n, mat& energy, int &iterations, double& time, double rho_max);
     int test_eigensolver();
     void make_A(int n, double max_rho, mat& A);

@@ -16,7 +16,7 @@ int main(){
 
     Non_interact* ni;
 
-    double rho_max = 20.0;
+    double rho_max = 1.0;
 
     ni = new Non_interact(rho_max);
 
