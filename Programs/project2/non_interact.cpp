@@ -11,11 +11,11 @@ void Non_interact::write_to_file(){
     ofstream outfile;
     mat energy = ones<vec>(3);
     mat known_values = vec({3.0, 7.0, 11.0});
-    double eps = pow(10,-10);
+    double eps = pow(10,-5);
     int iterations = 0;
-    int n = 100;
+    int n = 600;
     double time;
-    int limit = 200;
+    int limit = n+2;
 
     outfile.open("result.txt");
     outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
@@ -27,7 +27,7 @@ void Non_interact::write_to_file(){
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
         outfile << n << "    " << iterations << "    " << time << endl;
-        n +=10;
+        n +=1000;
     }
     n = n-10;
     if (n==limit-1){
@@ -94,7 +94,7 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
 }
 
 void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
-    double tol = 1e-10;
+    double tol = 1e-8;
     int k=10; int l=10;
     double max_ = 10;
     int max_iterations = pow(10,5);
@@ -146,9 +146,12 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
     }
 
     for (int i=0; i<n; i++) {
-        A(i,i)=2.0/(double)(h*h) + V[i];
-        if (i!=n-1) A(i,i+1) = -1.0/(double)(h*h);
-        if (i!=n-1) A(i+1,i) = -1.0/(double)(h*h);
+        double hh = h*h;
+        A(i,i)= 2.0/(hh) + V[i];
+        if (i!=n-1) {
+            A(i,i+1) = -1.0/(hh);
+            A(i+1,i) = -1.0/(hh);
+        }
 }
     return;
 }
