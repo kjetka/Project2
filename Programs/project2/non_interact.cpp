@@ -12,24 +12,26 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     double eps = pow(10,-5);
     int iterations = 0;
-    int n = 3;
+    int n = 1;
     double time;
-    int limit = 100;
+    int limit = 10;
 
-//    outfile.open("result.txt");
-//    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
+    outfile.open("result.txt");
+    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
 
     while(abs(energy(0) - known_values(0)) > eps &&
         abs(energy(1) - known_values(1)) > eps &&
-        abs(energy(2) - known_values(2)) >eps && n < limit){
+        abs(energy(2) - known_values(2)) >eps && n <= limit){
 
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
-//        outfile << n << "    " << iterations << "    " << time << endl;
+        outfile << n << "    " << iterations << "    " << time << endl;
         n +=1;
     }
+
     n = n-1;
-    if (n==limit-1){
+
+    if (n==limit){
         cout << "Did not get four decimal points accuracy" << endl;
     }
     else{
@@ -39,7 +41,7 @@ void Non_interact::write_to_file(){
     cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
     cout << "rho_max: " << rho_max << "   " << "n: " << n << endl;
 
-//    outfile.close();
+    outfile.close();
 
     }
 
@@ -91,7 +93,7 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
     double tol = 1e-10;
     int k=10; int l=10;
     double max_ = 10;
-    int max_iterations = n*20;
+    int max_iterations = n*100;
     iterations = 0;
 
     R = zeros<mat>(n,n);
@@ -101,14 +103,20 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
         }
     }
 
-    while(max_ > tol && iterations < max_iterations){
-        max_ = norm_off_diag( A, k, l, n);
-        Jacobi_rot(A,R, k,l, n);
-        iterations +=1;
+    // Test: Is it finding the maximum value?
+//    int statement = test_off_diagonal();
+//    if (statement == 1){
+        while(max_ > tol && iterations < max_iterations){
+            max_ = norm_off_diag( A, k, l, n);
+            Jacobi_rot(A,R, k,l, n);
+            iterations +=1;
+        }
 
-    }
-
-    iterations = iterations-1;
+//    }
+//        else{
+//        cout << "Error! Something is wrong in norm_off_diagonal. Can't find the maximum value." << endl;
+//        exit(3);
+//    }
 
 }
 
@@ -123,7 +131,6 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
         rho(i) = i*h;
         V(i) = rho(i)*rho(i);
     }
-
 
     for (int i=0; i<n; i++) {
         A(i,i)=2.0/(double)(h*h) + V[i];
@@ -215,3 +222,24 @@ int Non_interact::test_eigensolver(){
     }
 }
 
+int Non_interact::test_off_diagonal(){
+    mat A = {{1, 3, 1},{2, 1, 0.5},{1.5, 6, 2}};
+
+    double max_a_kl =0;
+    int n = size(A)[0];
+
+    for(int i = 0; i<n;i++){
+        for(int j=i+1; j<n; j++){
+           double aij = fabs(A(i,j));
+            if(aij > max_a_kl){
+                max_a_kl = aij;
+            }
+        }
+    }
+    if (abs(max_a_kl- 3.0) <= pow(10,-4)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}

@@ -16,9 +16,8 @@ int main(){
 
     Non_interact* ni;
 
-
-    double rho_max;
-
+    double rho_max = 1.0;
+/*
     for(int rhos=1;rhos<20;rhos++){
         rho_max = rhos*1.0;
         ni = new Non_interact(rho_max);
@@ -27,6 +26,10 @@ int main(){
 
 //    ni->test_eigensolver();
     //ni->Jacobi_func(3);
+*/
+
+    ni = new Non_interact(rho_max);
+    ni->write_to_file();
 
 
 cout << "A must be symmetric, should we test it?"<<endl;
