@@ -14,19 +14,21 @@ void Non_interact::write_to_file(){
     int iterations = 0;
     int n = 3;
     double time;
-    int limit = 10;
+    int limit = 100;
 
-    outfile.open("result.txt");
-    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
+//    outfile.open("result.txt");
+//    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
 
     while(abs(energy(0) - known_values(0)) > eps &&
         abs(energy(1) - known_values(1)) > eps &&
         abs(energy(2) - known_values(2)) >eps && n < limit){
+
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
-        outfile << n << "    " << iterations << "    " << time << endl;
-        n +=10;
+
+//        outfile << n << "    " << iterations << "    " << time << endl;
+        n +=1;
     }
-    n = n-10;
+    n = n-1;
     if (n==limit-1){
         cout << "Did not get four decimal points accuracy" << endl;
     }
@@ -35,25 +37,32 @@ void Non_interact::write_to_file(){
     }
 
     cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
+    cout << "rho_max: " << rho_max << "   " << "n: " << n << endl;
 
-    outfile.close();
+//    outfile.close();
 
     }
 
 void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time, double rho_max){
     mat R, A;
     make_A(n, rho_max, A);
+
     //A.print("A");
     //cout << "results:"<<endl;
     //A.print("A");
     //R.print("R");
+
+    // Test if Jacobi works
     int statement = test_eigensolver();
-    if (statement == 1) Jacobi(A, R, n, iterations);
-    else{
+    if (statement == 1){
+        Jacobi(A, R, n, iterations);
+    }
+        else{
         cout << "Error! Something is wrong in Jacobi. Getting wrong eigenvalues." << endl;
         exit(2);
     }
 
+    // Sorting eiegenvalues and eigenvectors
             mat eigenvalues = ones<vec>(n);
             mat eigenvectors = ones<mat>(n,n);
 
@@ -82,7 +91,8 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
     double tol = 1e-10;
     int k=10; int l=10;
     double max_ = 10;
-    int max_iterations = n*10;
+    int max_iterations = n*20;
+    iterations = 0;
 
     R = zeros<mat>(n,n);
     for (int i =0;i<n;i++){
@@ -95,6 +105,7 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
         max_ = norm_off_diag( A, k, l, n);
         Jacobi_rot(A,R, k,l, n);
         iterations +=1;
+
     }
 
     iterations = iterations-1;
@@ -135,7 +146,7 @@ double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
             }
         }
     }
-    return pow(max_a_kl,2);
+    return max_a_kl;
 
 }
 
@@ -191,7 +202,7 @@ void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
 int Non_interact::test_eigensolver(){
     mat A = {{3,1},{1,3}};
     mat R;
-    int iterations = 1;
+    int iterations = 0;
 //    A.print("Test matrix");
     Jacobi(A, R, 2, iterations);
 //    A.print("Eigenvalues:");

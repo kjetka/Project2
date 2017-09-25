@@ -16,11 +16,15 @@ int main(){
 
     Non_interact* ni;
 
-    double rho_max = 1.0;
 
-    ni = new Non_interact(rho_max);
+    double rho_max;
 
-    ni->write_to_file();
+    for(int rhos=1;rhos<20;rhos++){
+        rho_max = rhos*1.0;
+        ni = new Non_interact(rho_max);
+        ni->write_to_file();
+    }
+
 //    ni->test_eigensolver();
     //ni->Jacobi_func(3);
 
