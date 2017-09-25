@@ -22,7 +22,7 @@ void Non_interact::write_to_file(){
 
     while(abs(energy(0) - known_values(0)) > eps &&
         abs(energy(1) - known_values(1)) > eps &&
-        abs(energy(2) - known_values(2)) >eps && n < limit){
+        abs(energy(2) - known_values(2)) >eps && n <= limit){
 
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
@@ -108,6 +108,20 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
     }
 */
 
+    // Test: Is it finding the maximum value?
+//    int statement = test_off_diagonal();
+//    if (statement == 1){
+        while(max_ > tol && iterations < max_iterations){
+            max_ = norm_off_diag( A, k, l, n);
+            Jacobi_rot(A,R, k,l, n);
+            iterations +=1;
+        }
+
+//    }
+//        else{
+//        cout << "Error! Something is wrong in norm_off_diagonal. Can't find the maximum value." << endl;
+//        exit(3);
+//    }
     while(max_ > tol && iterations < max_iterations){
         max_ = norm_off_diag( A, k, l, n);
         Jacobi_rot(A,R, k,l, n);
@@ -130,7 +144,6 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
         //rho(i) = rho;
         V(i) = rho*rho;
     }
-
 
     for (int i=0; i<n; i++) {
         A(i,i)=2.0/(double)(h*h) + V[i];
@@ -222,3 +235,24 @@ int Non_interact::test_eigensolver(){
     }
 }
 
+int Non_interact::test_off_diagonal(){
+    mat A = {{1, 3, 1},{2, 1, 0.5},{1.5, 6, 2}};
+
+    double max_a_kl =0;
+    int n = size(A)[0];
+
+    for(int i = 0; i<n;i++){
+        for(int j=i+1; j<n; j++){
+           double aij = fabs(A(i,j));
+            if(aij > max_a_kl){
+                max_a_kl = aij;
+            }
+        }
+    }
+    if (abs(max_a_kl- 3.0) <= pow(10,-4)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
