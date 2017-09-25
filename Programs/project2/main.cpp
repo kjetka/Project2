@@ -22,7 +22,7 @@ int main(){
     start1 = clock();
 
    // for(int rhos=1;rhos<20;rhos++){
-        rho_max = 50.0; //rhos*1.0;
+        rho_max = 20.0; //rhos*1.0;
         ni = new Non_interact(rho_max);
         ni->write_to_file();
 

@@ -13,7 +13,7 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     double eps = pow(10,-5);
     int iterations = 0;
-    int n = 600;
+    int n = 400;
     double time;
     int limit = n+2;
 
