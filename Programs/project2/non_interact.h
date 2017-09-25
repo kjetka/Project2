@@ -21,6 +21,7 @@ public:
     int test_eigensolver();
     void make_A(int n, double max_rho, mat& A);
     void Jacobi(mat& A, mat& R, int n, int& iterations);
+
 private:
     int rho_max = 1;
 

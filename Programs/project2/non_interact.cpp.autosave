@@ -126,7 +126,7 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
 
     double rho;
     for(int i = 0; i<n;i++){
-        rho = (i+1)*h;
+        rho = (i)*h;
         //rho(i) = rho;
         V(i) = rho*rho;
     }
