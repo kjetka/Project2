@@ -3,8 +3,9 @@
 #include <time.h>
 
 
-Non_interact::Non_interact(double rho_max) {
+Non_interact::Non_interact(double rho_max,vec n_list) {
     this->rho_max = rho_max;
+    this->n_list = n_list;
 }
 
 void Non_interact::write_to_file(){
@@ -13,32 +14,37 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     double eps = pow(10,-5);
     int iterations = 0;
-    int n = 400;
+    //int n = 400;
     double time;
-    int limit = n+2;
+    //int limit = n+2;
 
-    outfile.open("result.txt");
-    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << endl;
-
-    while(abs(energy(0) - known_values(0)) > eps &&
-        abs(energy(1) - known_values(1)) > eps &&
-        abs(energy(2) - known_values(2)) >eps && n <= limit){
-
+    outfile.open("../result.txt");
+    outfile <<"rho_max = "<<rho_max <<endl;
+    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << "            eigvec1  "<<"     eigvec2  "<<"       eigvec3 "<<endl;
+    int i = 0;
+    double n;
+    //while(abs(energy(0) - known_values(0)) > eps &&
+    //    abs(energy(1) - known_values(1)) > eps &&
+    //    abs(energy(2) - known_values(2)) >eps) && (i<size(n_list)){
+    while(i<size(n_list)[0]){
+        n = n_list(i);
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
-        outfile << n << "    " << iterations << "    " << time << endl;
-        n +=1000;
+        outfile << n << "               " << iterations << "           " << time << "          "<< energy(0) <<"       "<< energy(1) <<"       "<< energy(2) <<endl;
+        cout << "n = "<< n<<endl;
+        cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
+        //n +=1000;
+        i +=1;
+
     }
-    n = n-10;
-    if (n==limit-1){
+   /* if (n==limit-1){
         cout << "Did not get four decimal points accuracy" << endl;
     }
     else{
         cout << n << " mesh points were necassary to get four decimal points." << endl;
     }
-
-    cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
-    cout << "rho_max: " << rho_max << "   " << "n: " << n << endl;
+    */
+    //cout << "rho_max: " << rho_max << "   " << "n: " << n << endl;
 
     outfile.close();
 
@@ -94,7 +100,7 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
 }
 
 void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
-    double tol = 1e-8;
+    double tol = 1e-10;
     int k=10; int l=10;
     double max_ = 10;
     int max_iterations = pow(10,5);
@@ -109,25 +115,19 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
 */
 
     // Test: Is it finding the maximum value?
-//    int statement = test_off_diagonal();
-//    if (statement == 1){
+    int statement = 1;//test_off_diagonal();
+    if (statement == 1){
         while(max_ > tol && iterations < max_iterations){
             max_ = norm_off_diag( A, k, l, n);
             Jacobi_rot(A,R, k,l, n);
             iterations +=1;
         }
 
-//    }
-//        else{
-//        cout << "Error! Something is wrong in norm_off_diagonal. Can't find the maximum value." << endl;
-//        exit(3);
-//    }
-    while(max_ > tol && iterations < max_iterations){
-        max_ = norm_off_diag( A, k, l, n);
-        Jacobi_rot(A,R, k,l, n);
-        iterations +=1;
     }
-
+        else{
+        cout << "Error! Something is wrong in norm_off_diagonal. Can't find the maximum value." << endl;
+        exit(3);
+    }
 
 }
 
@@ -259,3 +259,5 @@ int Non_interact::test_off_diagonal(){
         return 0;
     }
 }
+
+
