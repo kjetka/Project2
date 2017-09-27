@@ -3,22 +3,30 @@
 #include <time.h>
 
 
-Non_interact::Non_interact(double rho_max,vec n_list) {
+Non_interact::Non_interact(double rho_max, vec n_list, double omega){
     this->rho_max = rho_max;
     this->n_list = n_list;
+    this->omega = omega;
 }
 
 void Non_interact::write_to_file(){
     ofstream outfile;
     mat energy = ones<vec>(3);
     mat known_values = vec({3.0, 7.0, 11.0});
-    double eps = pow(10,-5);
+    //double eps = pow(10,-5);
     int iterations = 0;
     //int n = 400;
     double time;
     //int limit = n+2;
 
-    outfile.open("../result.txt");
+
+    string str = to_string(omega);
+    replace(str.begin(), str.end(), '.', '_');
+    string filename = string("result_omega_") + str + string(".txt");
+
+    if(omega == 0) filename = "result.txt";
+
+    outfile.open(filename);
     outfile <<"rho_max = "<<rho_max <<endl;
     outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << "            eigvec1  "<<"     eigvec2  "<<"       eigvec3 "<<endl;
     int i = 0;
@@ -26,7 +34,8 @@ void Non_interact::write_to_file(){
     //while(abs(energy(0) - known_values(0)) > eps &&
     //    abs(energy(1) - known_values(1)) > eps &&
     //    abs(energy(2) - known_values(2)) >eps) && (i<size(n_list)){
-    while(i<size(n_list)[0]){
+    int m = size(n_list)[0];
+    while(i<m){
         n = n_list(i);
         Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
@@ -137,12 +146,17 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
     mat V = ones<vec>(n); // potential
     //mat rho = ones<vec>(n); // dimentionless radius
     double h = rho_max/(double) n;
-
     double rho;
+
     for(int i = 0; i<n;i++){
-        rho = (i+1)*h;
-        //rho(i) = rho;
-        V(i) = rho*rho;
+            rho = (i+1)*h;
+        if(omega == 0){
+            //rho(i) = rho;
+            V(i) = rho*rho;
+        }
+        else{
+            V(i) = omega*omega*rho*rho + 1/rho; //OBS! Blir rho veldig liten? evt veldig stor?
+        }
     }
 
     for (int i=0; i<n; i++) {

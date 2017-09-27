@@ -20,33 +20,29 @@ int main(){
     double rho_max;
     clock_t start1, finish1;
     start1 = clock();
-    vec n_list= {10, 100,200, 400};
+    vec n_list= {10, 100, 500};
+    vec omega_list = {0, 0.01, 0.5, 1.0, 5.0};
 
    // for(int rhos=1;rhos<20;rhos++){
 
         rho_max = 16.0; //rhos*1.0;
-        ni = new Non_interact(rho_max, n_list);
-        ni->write_to_file();
+
+        for(int i = 0;i<5;i++){
+            ni = new Non_interact(rho_max, n_list, omega_list(i)); //for the non-interacting case omega = 0
+            ni->write_to_file();
+        }
+
 
 
     //}
-
+/*
         finish1 = clock();
         double tid = (double) (finish1 - start1)/(CLOCKS_PER_SEC );
 
 
 cout << "Time entire crap "<<tid<<endl;
 cout << "A must be symmetric, should we test it?"<<endl;
-
-
-
-
-
-
-
-
-
-
+*/
 }
 
 

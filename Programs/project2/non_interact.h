@@ -11,7 +11,7 @@ class Non_interact
 {
 public:
 
-    Non_interact(double rho_max, vec n_list);
+    Non_interact(double rho_max, vec n_list, double omega);
 
 
     double norm_off_diag(mat& A, int& k, int& l, int n);
@@ -25,6 +25,7 @@ public:
 private:
     int rho_max = 1;
     vec n_list = {1};
+    double omega = 1;
 
 
 
