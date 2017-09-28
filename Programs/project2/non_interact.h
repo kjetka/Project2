@@ -23,7 +23,7 @@ public:
     void Jacobi(mat& A, mat& R, int n, int& iterations);
     int test_off_diagonal();
 private:
-    int rho_max = 1;
+    double rho_max = 1;
     vec n_list = {1};
     double omega = 1;
 

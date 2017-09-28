@@ -17,15 +17,14 @@ int main(){
     Non_interact* ni;
 
 
-    double rho_max;
     clock_t start1, finish1;
     start1 = clock();
-    vec n_list= {10, 100, 500};
+    vec n_list= {10, 100,200,400};
     vec omega_list = {0, 0.01, 0.5, 1.0, 5.0};
 
    // for(int rhos=1;rhos<20;rhos++){
 
-        rho_max = 16.0; //rhos*1.0;
+        cout<< "Rho_max = "<< fixed<< rho_max << endl;
 
         for(int i = 0;i<5;i++){
             ni = new Non_interact(rho_max, n_list, omega_list(i)); //for the non-interacting case omega = 0
@@ -41,8 +40,16 @@ int main(){
 
 
 cout << "Time entire crap "<<tid<<endl;
-cout << "A must be symmetric, should we test it?"<<endl;
-*/
+
+
+
+
+
+
+
+
+
+
 }
 
 

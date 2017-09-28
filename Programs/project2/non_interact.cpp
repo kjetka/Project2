@@ -19,6 +19,7 @@ void Non_interact::write_to_file(){
     double time;
     //int limit = n+2;
 
+    outfile.open("../result.txt");
 
     string str = to_string(omega);
     replace(str.begin(), str.end(), '.', '_');
@@ -42,6 +43,8 @@ void Non_interact::write_to_file(){
         outfile << n << "               " << iterations << "           " << time << "          "<< energy(0) <<"       "<< energy(1) <<"       "<< energy(2) <<endl;
         cout << "n = "<< n<<endl;
         cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
+        cout <<"Iterations: "<<iterations<<endl;
+        cout << "-----------------" <<endl;
         //n +=1000;
         i +=1;
 
@@ -112,17 +115,10 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
     double tol = 1e-10;
     int k=10; int l=10;
     double max_ = 10;
-    int max_iterations = pow(10,5);
+    int max_iterations = pow(10,6);
     iterations = 0;
 
     R = eye<mat>(n,n);
-    /*for (int i =0;i<n;i++){
-        for (int j =0;j<n;j++){
-            if(i==j) R(i,j) = 1;
-        }
-    }
-*/
-
     // Test: Is it finding the maximum value?
     int statement = 1;//test_off_diagonal();
     if (statement == 1){
@@ -131,13 +127,11 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
             Jacobi_rot(A,R, k,l, n);
             iterations +=1;
         }
-
     }
         else{
         cout << "Error! Something is wrong in norm_off_diagonal. Can't find the maximum value." << endl;
         exit(3);
     }
-
 }
 
 void Non_interact::make_A(int n, double rho_max, mat& A){
