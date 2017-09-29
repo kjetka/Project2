@@ -1,7 +1,10 @@
 #include "non_interact.h"
 #include <cmath>
 #include <time.h>
+#include <armadillo>
 
+using namespace arma;
+using namespace std;
 
 Non_interact::Non_interact(double rho_max, vec n_list, double omega){
     this->rho_max = rho_max;
@@ -10,42 +13,93 @@ Non_interact::Non_interact(double rho_max, vec n_list, double omega){
 }
 
 void Non_interact::write_to_file(){
-    ofstream outfile;
     mat energy = ones<vec>(3);
     mat known_values = vec({3.0, 7.0, 11.0});
     int iterations = 0;
-    double time;
 
+    double time_jacobi;
     string str = to_string(omega);
     str.resize(4);
     string filename = string("../outfiles/")+ string("result_omega_") + str + string(".txt");
 
-    if(omega == 0) {filename = "../outfiles/result_1b.txt";}
+    ofstream outfile;
+
+
+    if(omega == 0) {
+        ofstream outfile1;
+        ofstream outfile2;
+
+
+        double time_arma;
+        string  filename1 = "../outfiles/result_eigval.tex";
+        string filename2 = "../outfiles/result_time.tex";
+
+        outfile1.open(filename1);
+        outfile2.open(filename2);
+        outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$    "<<endl;
+        outfile1 << "\\hline"<< endl;
+        outfile2 <<"N       &   # Similarity transforms   &  time Jacobi (s)      & time Armadillo (ms)            "<<endl;
+        outfile2 << "\\hline"<< endl;
+
+        for (int i=0; i<size(n_list)[0]; i++){
+            iterations = 0;
+            time_arma = 0;
+            time_jacobi =0;
+            double n = n_list(i);
+            Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max);
+            armadillo_ref(n, rho_max, time_arma);
+
+
+            outfile1 << n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2) <<endl;
+            outfile2 << n<< "      &   "   << iterations  <<  "      &   " << time_jacobi << "      &   " << time_arma*1e3 << endl;
+
+            cout << "time arma:  "<<time_arma <<endl;
+            cout << "time jacobi:  "<<time_jacobi <<endl;
+
+        }
+
+        outfile1.close();
+        outfile2.close();
+
+
+
+
+    }
+
+
+    //-------------------------------------
+
+    //-------------------------------------
+
+else{
+
+
+
+
     outfile.open(filename);
     outfile <<"rho_max = "<<rho_max <<endl;
-    outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << "            eigvec1  "<<"     eigvec2  "<<"       eigvec3 "<<endl;
-    int i = 0;
-    double n;
-    int m = size(n_list)[0];
-    while(i<m){
-        n = n_list(i);
-        Solve_SE_twoparticle(n, energy, iterations, time, rho_max);
 
-        outfile << n << "               " << iterations << "           " << time << "          "<< energy(0) <<"       "<< energy(1) <<"       "<< energy(2) <<endl;
-        cout << "n = "<< n<<endl;
-        cout << "The eigenvalues are: " << energy(0) <<", "<< energy(1) <<" and "<< energy(2) << endl;
-        cout <<"Iterations: "<<iterations<<endl;
-        cout << "-----------------" <<endl;
-        //n +=1000;
-        i +=1;
+    }
+    outfile << "N   &      eigvec1    &       eigvec2    &      eigvec3 "<<endl;
+    outfile << "\\hline"<<endl;
 
+    for (int i=0; i<size(n_list)[0]; i++){
+
+        double n = n_list(i);
+        Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max);
+
+
+        outfile << n << "               "    << "          "<< energy(0) <<"       "<< energy(1) <<"       "<< energy(2) <<endl;
     }
 
     outfile.close();
-
     }
 
-void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time, double rho_max){
+
+
+
+
+void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time_jacobi, double rho_max){
     mat R, A;
     make_A(n, rho_max, A);
 
@@ -63,24 +117,27 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
         exit(2);
     }
     finish_n = clock();
-    time = (double) (finish_n - start_n)/(CLOCKS_PER_SEC );
+    time_jacobi = (double) (finish_n - start_n)/double((CLOCKS_PER_SEC ));
 
     // Sorting eiegenvalues and eigenvectors
             mat eigenvalues = ones<vec>(n);
-            mat eigenvectors = ones<mat>(n,n);
+            //mat eigenvectors = ones<mat>(n,n);
 
         for(int i=0;i<n;i++){
             eigenvalues(i) = A(i,i);
         }
+
   //      eigenvalues.print("lambda");
 
         uvec eigenindex =  sort_index(eigenvalues);
 
         eigenvalues = sort(eigenvalues);
+        /*
         for(int j=0;j<n;j++){
             eigenvectors.col(j) = R.col(eigenindex(j));
         }
 
+        */
         energy(0) = eigenvalues(0);
         energy(1) = eigenvalues(1);
         energy(2) = eigenvalues(2);
@@ -237,6 +294,19 @@ int Non_interact::test_off_diagonal(){
     else{
         return 0;
     }
+}
+
+void Non_interact::armadillo_ref(int n, double rho_max, double& time_arma){
+
+       mat A = zeros<mat>(n,n);
+       make_A(n, rho_max, A);
+       clock_t start_arma, finish_arma;
+       start_arma = clock();
+
+       vec eigval = eig_sym(A);
+
+       finish_arma = clock();
+       time_arma = (double) (finish_arma - start_arma)/(CLOCKS_PER_SEC );
 }
 
 

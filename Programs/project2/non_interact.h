@@ -25,7 +25,7 @@ public:
 
     void testing(double t);
 
-
+    void armadillo_ref(int n, double rho_max, double &time_arma);
 private:
     double rho_max = 1;
     vec n_list = {1};
