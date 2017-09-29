@@ -13,28 +13,19 @@ void Non_interact::write_to_file(){
     ofstream outfile;
     mat energy = ones<vec>(3);
     mat known_values = vec({3.0, 7.0, 11.0});
-    //double eps = pow(10,-5);
     int iterations = 0;
-    //int n = 400;
     double time;
-    //int limit = n+2;
-
-    outfile.open("../result.txt");
 
     string str = to_string(omega);
-    replace(str.begin(), str.end(), '.', '_');
-    string filename = string("result_omega_") + str + string(".txt");
+    str.resize(4);
+    string filename = string("../outfiles/")+ string("result_omega_") + str + string(".txt");
 
-    if(omega == 0) filename = "result.txt";
-
+    if(omega == 0) {filename = "../outfiles/result_1b.txt";}
     outfile.open(filename);
     outfile <<"rho_max = "<<rho_max <<endl;
     outfile << "Mesh points" << "    " << "iterations" << "    " << "time" << "            eigvec1  "<<"     eigvec2  "<<"       eigvec3 "<<endl;
     int i = 0;
     double n;
-    //while(abs(energy(0) - known_values(0)) > eps &&
-    //    abs(energy(1) - known_values(1)) > eps &&
-    //    abs(energy(2) - known_values(2)) >eps) && (i<size(n_list)){
     int m = size(n_list)[0];
     while(i<m){
         n = n_list(i);
@@ -49,14 +40,6 @@ void Non_interact::write_to_file(){
         i +=1;
 
     }
-   /* if (n==limit-1){
-        cout << "Did not get four decimal points accuracy" << endl;
-    }
-    else{
-        cout << n << " mesh points were necassary to get four decimal points." << endl;
-    }
-    */
-    //cout << "rho_max: " << rho_max << "   " << "n: " << n << endl;
 
     outfile.close();
 
@@ -65,11 +48,6 @@ void Non_interact::write_to_file(){
 void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time, double rho_max){
     mat R, A;
     make_A(n, rho_max, A);
-
-    //A.print("A");
-    //cout << "results:"<<endl;
-    //A.print("A");
-    //R.print("R");
 
     // Test if Jacobi works
     int statement = test_eigensolver();
@@ -102,8 +80,6 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
         for(int j=0;j<n;j++){
             eigenvectors.col(j) = R.col(eigenindex(j));
         }
-
-        //if(abs(min_element(eigenvalues) - energy(0))<= pow(10, -4)) cout << "its ok" << endl;
 
         energy(0) = eigenvalues(0);
         energy(1) = eigenvalues(1);
@@ -138,7 +114,6 @@ void Non_interact::make_A(int n, double rho_max, mat& A){
 
     A = zeros<mat>(n,n);
     mat V = ones<vec>(n); // potential
-    //mat rho = ones<vec>(n); // dimentionless radius
     double h = rho_max/(double) n;
     double rho;
 
@@ -211,7 +186,6 @@ void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
      A(k,k) = cc * a_kk -2.0*cs*a_kl + ss*a_ll;
      A(l,l) = ss*a_kk + 2.0*cs*a_kl + cc*a_ll;
      A(k,l) = 0.0; A(l,k) = 0.0;
-     //cout <<A(k,k)<<endl;
 
      for(int i=0;i<n; i++){
          if (i!= k && i!= l){
@@ -234,10 +208,7 @@ int Non_interact::test_eigensolver(){
     mat A = {{3,1},{1,3}};
     mat R;
     int iterations = 0;
-//    A.print("Test matrix");
     Jacobi(A, R, 2, iterations);
-//    A.print("Eigenvalues:");
-//    R.print("Eigenvectors:");
     if (abs(A(0,0)- 2.0) <= pow(10,-4) && abs(A(1,1)- 4.0) <= pow(10,-4)){
         return 1;
     }
@@ -267,5 +238,7 @@ int Non_interact::test_off_diagonal(){
         return 0;
     }
 }
+
+
 
 

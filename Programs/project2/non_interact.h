@@ -22,6 +22,10 @@ public:
     void make_A(int n, double max_rho, mat& A);
     void Jacobi(mat& A, mat& R, int n, int& iterations);
     int test_off_diagonal();
+
+    void testing(double t);
+
+
 private:
     double rho_max = 1;
     vec n_list = {1};
