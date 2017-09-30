@@ -1,9 +1,124 @@
+\subsection{Dimensionless and scaled Schrödinger Equation}
 
+In this report we are looking at how to solve an eigenvalue problem using Jacobi's method. The eigenvalue problem we will solve is the two particle Schrödinger Equation for the ground state and the harmonic oscillator potential. 
+We then start out with the one particle radial Schrödinger Equation (Equation \ref{eq:radial_SE} for the ground state which means that the quantum number $l = 0$. Here $R$ is the radial part of the wave function, $r$ is the distance from the origin to the electron, $m$ is the mass of the particle, $\hbar$ is Planck's constant and $E$ is the energy. The harmonic oscillator potential is shown in Equation \ref{eq:harmonic_potential}. Here $k$ is the wave number and $\omega$ is the oscillator frequency.
 
-\begin{align}
+\begin{equation}\label{eq:radial_SE}
+- \frac{\hbar^2}{2m}\left(\frac{1}{r^2}\frac{d}{dr}r^2\frac{d}{dr}\right)R(r) + V(r)R(r) = ER(r)
+\end{equation}
+
+\begin{equation}\label{eq:harmonic_potential}
+V(r) = \frac{1}{2}kr^2 \hspace{0.5cm} \text{where } k = m \omega^2 
+\end{equation}
+
+After substituting $R(r) = \frac{1}{r}u(r) = \frac{\alpha}{\rho} u(\rho )$ where $\rho = \frac{r}{\alpha}$, a dimensionless variable, and $\alpha$ is subsequently a constant with dimension length, the radial Schrödinger equation with the harmonic oscillator potential looks like Equation \ref{eq:dimless_SE}.
+
+\begin{equation}\label{eq:dimless_SE}
+- \frac{\hbar^2}{2m\alpha^2}\frac{d^2}{d\rho^2}u(\rho ) + \frac{1}{2}k\alpha^2 \rho^2 u(\rho ) = Eu(\rho )
+\end{equation}
+
+To make the equation a pure eigenvalue problem, we need to scale the equation properly, that we can to with the help of the inserted $\alpha$. We start by multiplying Equation \ref{eq:dimless_SE} with $\frac{2m \alpha^2}{\hbar^2}$:
+\[
+-\frac{d^2}{d\rho^2}u(\rho ) + \frac{m\alpha^4}{\hbar^2}k\rho^2 u(\rho ) = \frac{2m\alpha^2}{\hbar^2}E u(\rho )
+\]
+
+If we set $ \frac{m\alpha^4}{\hbar^2}k = 1$ then $\alpha = \left(\frac{\hbar^2}{mk}\right)^{\frac{1}{4}}$ and the equation is then written as Equation \ref{eq:scaled_SE}.
+
+\begin{equation}\label{eq:scaled_SE}
+-\frac{d^2}{d\rho^2}u(\rho ) + \rho^2 u(\rho ) = \lambda u(\rho ) \hspace{0.5cm} \text{where }\lambda = \frac{2m\alpha^2}{\hbar^2}E
+\end{equation}
+\subsection{An eigenvalue problem}
+
+We have the scaled and dimensionless Schrödinger Equation (Equation \ref{eq:scaled_SE}) and the next move is to make it into a numerical eigenvalue problem. We start by making the continuous function $u(\rho )$ a discrete number of values $u_i = u(\rho_i)$. Here $\rho_i = \rho_0 + ih$ where $h$ is the step length  $h = \frac{\rho_{max}}{N}$, $N$ is the number of mesh points and $\rho_0 = 0$. $\rho_{max}$ should be infinitely big which is not possible, since $r \in [0, \infty )$, but we will come back to that in the method part of the report. Using the expression for the second derivative we get:
+\[
+- \frac{u_{i+1} - 2u_i + u_{i-1}}{h^2} + \rho_i^2 u_i = \lambda u_i
+\]
+from Equation \ref{eq:scaled_SE}.
+
+This equation can be rewritten into a matrix eigenvalue equation shown in Equation \ref{eq:eigenvalue_prob}
+\begin{equation}\label{eq:eigenvalue_prob}
+\begin{bmatrix}
+d_1 & e_1 & 0 & \cdots & 0 & 0\\
+e_1 & d_2 & e_2 & \cdots & 0 & 0\\
+0 & e_2 & d_3 & \cdots & 0 & 0\\
+\vdots & \vdots & \vdots & \ddots & \vdots & \vdots\\
+0 & 0 & 0 & \cdots & d_{N-1} & e_{N-1}\\
+0 & 0 & 0 & \cdots & e_{N-1} & d_N\\
+\end{bmatrix} \begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ \vdots \\ u_{N-1} \\ u_N \\ 
+\end{bmatrix} = \lambda \begin{bmatrix}
+u_1 \\ u_2 \\ u_3 \\ \vdots \\ u_{N-1} \\ u_N \\
+\end{bmatrix}
+\end{equation}
+
+where $d_i = \frac{2}{h^2} + \rho_i^2$ and $e_i = -\frac{1}{h^2}$.
+
+\subsection{Jacobi's method}
+
+We are using Jacobi's method to solve the eigenvalue problem from Equation \ref{eq:eigenvalue_prob} in the previous section. We know that for a symmetric matrix $\textbf{A} \in \mathbb{R}^{n\times n}$ there exists a real orthogonal matrix $\textbf{S}$ so that $ \textbf{S}^{T}AS = D$ where $D$ is a diagonal matrix with the eigenvalues on the diagonal.
+
+The idea of eigenvalue problem solving is to do a series of similarity transformations of the matrix $\textbf{A}$ so that eventually the matrix $A$ is reduced to the matrix $D$ and we have the eigenvalues. $\textbf{B}$ is a similarity transformation of $\textbf{A}$ if $\textbf{B} = \textbf{S}^T\textbf{A}\textbf{S}$.
+
+In Jacobi's method the  matrix $\textbf{S}$ used in the similarity transformations is the orthogonal transformation matrix on the form:
+\[
+\begin{bmatrix}
+1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & \cos \theta & 0 & 0 & \sin \theta\\
+0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & -\sin \theta & 0 & 0 & \cos \theta\\
+\end{bmatrix}
+\]
+
+Let $s_{ij}$ be an element in the matrix $\textbf{S}$ and then $s_{ii} = 1$, $s_{kk} = s_{ll} = \cos \theta$ and $s_{kl} = -s_{kl} = - \sin \theta$ where $ i \neq k$ and $i \neq l$. Here $k$, $l$ are the number of a row or a column and $i$ is the index of the columns and row.  
+
+The similarity transformation of a matrix will then change the elements in the matrix. The clue of the method is to choose the angle, $\theta$, so that the elements that are not on the diagonal become zero. Because of the nature of the similarity transformation the eigenvalues stay the same:
+\begin{align*}
+\textbf{A}\textbf{x} &= \lambda\textbf{x}\\
+\textbf{S}^T\textbf{A}\textbf{x} &= \textbf{S}^T\lambda\textbf{x}\\
+\textbf{S}^T\textbf{A}\textbf{S}^T\textbf{S}\textbf{x} &= \lambda\textbf{S}^T\textbf{x}\\
+(\textbf{S}^T\textbf{A}\textbf{S})(\textbf{S}^T\textbf{x}) &= \lambda(\textbf{S}^T\textbf{x})\\
+\textbf{B}(\textbf{S}^T\textbf{x}) &= \lambda(\textbf{S}^T\textbf{x})
+\end{align*}
+
+The eigenfunctions change though, but their orthogonality remains because of $\textbf{S}$ is an orthogonal matrix and then $\textbf{S}^T\textbf{x} = \textbf{U}\textbf{x}$, a unitary transformation. It can be shown like this:
+\begin{align*}
 	\textbf{w}_i &= \textbf{Uv}_i\\
 	\textbf{w}_i^T\textbf{w}_j &= ( \textbf{Uv}_i)^T \textbf{Uv}_j\\
 	&= \textbf{v}_i^T\textbf{U}^T\textbf{Uv}_j\\
 	&= \textbf{v}_i^T\textbf{v}_j = \delta_{ij}
-\end{align}
-\AA
+\end{align*} 
+
+After a similarity transformation on the matrix $\textbf{A}$ the elements of the similarity transformation $\textbf{B}$ becomes:
+\begin{align*}
+b_{ik} &= a_{ik} \cos \theta - a_{il} \sin \theta \hspace{0.5cm} i \neq k, i\neq l\\
+b_{il} &= a_{il} \cos \theta + a_{ik} \sin \theta \hspace{0.5cm} i \neq k, i\neq l\\ 
+b_{kk} &= a_{kk} \cos^2 \theta - 2a_{kl} \cos \theta \sin \theta + a_{ll} \sin^2 \theta \\
+b_{ll} &= a_{ll} \cos^2 \theta - 2a_{kl} \cos \theta \sin \theta + a_{kk} \sin^2 \theta \\
+b_{kl} &= (a_{kk} - a_{ll})\cos \theta \sin \theta + a_{kl} (\sin^2 \theta - \cos^2 \theta) \\
+\end{align*}
+Jacobi's method is to reduce the norm of the non-diagonal elements of the matrix with similarity transformations. We change define $c = \cos \theta$ and $s = \sin \theta$. When we require the non-diagonal elements to be zero that implies that:
+\[
+b_{kl} = (a_{kk} - a_{ll})cs + a_{kl} (s^2 - c^2) = 0
+\]
+We can rearrange some variables and get:
+\[
+(a_{ll}- a_{kk})cs = a_{kl} (s^2 - c^2) \implies \frac{(a_{ll} - a_{kk})}{2a_{kl}} = \frac{1}{2}\left(\frac{s^2}{sc} - \frac{c^2}{sc}\right)
+\]
+We define $\tan \theta = t = s/c$ and $\cot 2\theta = \tau = \frac{a_{ll} - a_{kk}}{2a_{kl}}$ and insert that to the equation:
+\[
+\frac{(a_{ll} - a_{kk})}{2a_{kl}} = \frac{1}{2}\left(\frac{s}{c} - \frac{c}{s}\right) \implies \cot 2\theta = \frac{1}{2}(\tan \theta - \cot \theta)
+\]
+\[
+\cot \theta = \tan \theta - 2\cot 2\theta = (\tau - 2 t)
+\]
+\[
+\tau = \frac{1}{2}(t- (\tau - 2t)) \implies t^2 + 2\tau t-1 = 0
+\]
+Which then comes down to:
+\begin{align*}
+t &= \tau \pm \sqrt{1+\tau^2}\\ 
+c &= \cos \theta = \frac{1}{\sqrt{1+\tan^2\theta}} = \frac{1}{\sqrt{1+t^2}}\\
+s &= \sin \theta = \tan \theta \cos \theta = t c\\
+\end{align*}
