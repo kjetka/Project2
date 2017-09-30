@@ -14,7 +14,18 @@ s &= \sin \theta = \tan \theta \cos \theta = t c\\
 Algorigmer: Jacobi, rhomax
 valg av epsilon ("0")
 
-Forelesning: Konvergens etter mellom 12n3 og 20n3, vi har mye kjappere!!!!!
+Forelesning: Konvergens etter mellom 12n3 og 20n3, vi har mye kjappere!!!!! - fordi sym!!!
+
+
+Our matrix \textbf{A} is symmetric, meaning that $ \textbf{A}^T = \textbf{A} $. From this it follows that the product $ \textbf{S}^TAS $ also is symmetric, as is shown under:
+
+\begin{align}
+\textbf{S}^T\textbf{AS} &= \textbf{S}^T\textbf{A}^T(\textbf{S}^T)^T\\
+&= \textbf{S}^T\textbf{AS} 
+\end{align}
+
+Thus is it sufficient to search only the elements above the diagonal for the highest valued element in the matrix, instead of the entire matrix. 
+
 
 
 \subsection{Unit tests}
