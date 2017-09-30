@@ -19,8 +19,20 @@ def filer_funk(stikkord): #Stikkord = hvilke filer, Skanntype = n
 	
 	return filer_brukes
 
-filer = filer_funk("1b")
+filer = filer_funk("time")
 print filer
+
+
+n,time_jac, time_arma = loadtxt(filer[0],delimiter = '&', unpack=True, skiprows=2)
+
+time_arma = time_arma*1e-3
+
+semilogy(n,time_arma, label = 'Time arma')
+semilogy(n, time_jac, label = 'Time jacobi')
+legend()
+show()
+
+
 """
 
 for k in range(len(filer)):

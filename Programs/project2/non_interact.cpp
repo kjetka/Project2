@@ -6,10 +6,11 @@
 using namespace arma;
 using namespace std;
 
-Non_interact::Non_interact(double rho_max, vec n_list, double omega){
-    this->rho_max = rho_max;
+Non_interact::Non_interact(vec n_list,int N_omega, vec omega_list){
+    //this->rho_max = rho_max;
     this->n_list = n_list;
-    this->omega = omega;
+    this-> N_omega = N_omega;
+    this->omega_list = omega_list;
 }
 
 void Non_interact::write_to_file(){
@@ -17,28 +18,46 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     int iterations = 0;
 
+    double bee = 1.44;
+    double m = 0.51099*pow(10,6);
+    double hbarc2 =pow(1240.0/(2*M_PI),2);
+    double alfa =   hbarc2/(m*bee);
+    double E = hbarc2/(m*alfa*alfa);
+
+
     double time_jacobi;
-    string str = to_string(omega);
-    str.resize(4);
-    string filename = string("../outfiles/")+ string("result_omega_") + str + string(".txt");
+    //string str = to_string(omega);
+    //str.resize(4);
+    string filename = string("../../outfiles/results_omega.txt");
+
+
 
     ofstream outfile;
 
+    outfile.open(filename);
 
-    if(omega == 0) {
+    double omega = 0;
+    double rho_max = 4.79;
+    int stopp = size(omega_list)[0];
+    outfile << "   $\\omega_r$  &  $E_0 $ (eV)   &       $E_1$  (eV)  &      $E_2$ (eV)\\\\"<<endl;
+    outfile << "\\hline\\"<<endl;
+
+    for(int i = 0;i<stopp;i++){
+    omega = omega_list(i);
+    if(i == 0) {
         ofstream outfile1;
         ofstream outfile2;
 
 
         double time_arma;
-        string  filename1 = "../outfiles/result_eigval.tex";
-        string filename2 = "../outfiles/result_time.tex";
+        string  filename1 = "../../outfiles/result_eigval.txt";
+        string filename2 = "../../outfiles/result_time.txt";
 
         outfile1.open(filename1);
         outfile2.open(filename2);
-        outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$    "<<endl;
+        outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$  \\\\  "<<endl;
         outfile1 << "\\hline"<< endl;
-        outfile2 <<"N       &   # Similarity transforms   &  time Jacobi (s)      & time Armadillo (ms)            "<<endl;
+        outfile2 <<"N       &   # Similarity transforms   &  time Jacobi (s)      & time Armadillo (ms)     \\\\       "<<endl;
         outfile2 << "\\hline"<< endl;
 
         for (int i=0; i<size(n_list)[0]; i++){
@@ -46,12 +65,12 @@ void Non_interact::write_to_file(){
             time_arma = 0;
             time_jacobi =0;
             double n = n_list(i);
-            Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max);
-            armadillo_ref(n, rho_max, time_arma);
+            Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max, omega);
+            armadillo_ref(n, rho_max, time_arma, omega);
 
 
-            outfile1 << n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2) <<endl;
-            outfile2 << n<< "      &   "   << iterations  <<  "      &   " << time_jacobi << "      &   " << time_arma*1e3 << endl;
+            outfile1 << n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
+            outfile2 << n<< "      &   "   << iterations  <<  "      &   " << time_jacobi << "      &   " << time_arma*1e3<<"\\\\" << endl;
 
             cout << "time arma:  "<<time_arma <<endl;
             cout << "time jacobi:  "<<time_jacobi <<endl;
@@ -67,41 +86,27 @@ void Non_interact::write_to_file(){
     }
 
 
-    //-------------------------------------
+    else{
 
-    //-------------------------------------
+        if (omega<0.1) rho_max = 50;
+        cout << rho_max <<endl;
+        double n = N_omega;
+        Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max, omega);
 
-else{
 
+        outfile << omega << "       &        "   << energy(0)*E <<"    &   "<< energy(1)*E <<"   &    "<< energy(2)*E<<"\\\\" <<endl;
 
-
-
-    outfile.open(filename);
-    outfile <<"rho_max = "<<rho_max <<endl;
 
     }
-    outfile << "N   &      eigvec1    &       eigvec2    &      eigvec3 "<<endl;
-    outfile << "\\hline"<<endl;
 
-    for (int i=0; i<size(n_list)[0]; i++){
-
-        double n = n_list(i);
-        Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max);
-
-
-        outfile << n << "               "    << "          "<< energy(0) <<"       "<< energy(1) <<"       "<< energy(2) <<endl;
-    }
-
+}
     outfile.close();
-    }
 
+}
 
-
-
-
-void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time_jacobi, double rho_max){
+void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, double& time_jacobi, double rho_max, double omega){
     mat R, A;
-    make_A(n, rho_max, A);
+    make_A(n, rho_max, A, omega);
 
     // Test if Jacobi works
     int statement = test_eigensolver();
@@ -167,7 +172,7 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
     }
 }
 
-void Non_interact::make_A(int n, double rho_max, mat& A){
+void Non_interact::make_A(int n, double rho_max, mat& A, double omega){
 
     A = zeros<mat>(n,n);
     mat V = ones<vec>(n); // potential
@@ -296,10 +301,10 @@ int Non_interact::test_off_diagonal(){
     }
 }
 
-void Non_interact::armadillo_ref(int n, double rho_max, double& time_arma){
+void Non_interact::armadillo_ref(int n, double rho_max, double& time_arma, double omega){
 
        mat A = zeros<mat>(n,n);
-       make_A(n, rho_max, A);
+       make_A(n, rho_max, A, omega);
        clock_t start_arma, finish_arma;
        start_arma = clock();
 
