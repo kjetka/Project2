@@ -1,0 +1,25 @@
+
+\begin{table}[H]\caption{Convergence of eigenvalues for the non-interacting case using the Jacobi method}
+	\label{tab:eigval}
+	\begin{tabular}{cccc}
+		\input{../Outfiles/result_eigval.txt}
+	\end{tabular}
+\end{table}
+
+
+\begin{table}[H]\caption{Comparisson of the time used between the Jacobi-algorithm and the Armadillo function  $eig\_sym$ as a function of the mesh size N of matrix A. "Transforms" refers to the amount of similarity transforms the Jacobi method uses.}
+	\label{tab:time}
+	\begin{tabular}{cccccc}
+		\input{../Outfiles/result_time.txt}
+	\end{tabular}
+\end{table}
+
+
+
+
+\begin{table}[H]\caption{Eigenvalues for the interacting case. All the calculations are done with a mesh size of N=400. $ \rho_{max} $ was set to $ 7.9 $ for all $ \omega_r $, except for $ \omega_r  = 0.01$ ( $ \rho_{max} =50$). }
+	\label{tab:omega}
+	\begin{tabular}{cccc}
+		\input{../Outfiles/results_omega.txt}
+	\end{tabular}
+\end{table}x

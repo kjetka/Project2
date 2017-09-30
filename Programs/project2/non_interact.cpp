@@ -2,6 +2,12 @@
 #include <cmath>
 #include <time.h>
 #include <armadillo>
+#include <fstream>
+#include <iostream>
+#include "non_interact.h"
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
 
 using namespace arma;
 using namespace std;
@@ -13,17 +19,19 @@ Non_interact::Non_interact(vec n_list,int N_omega, vec omega_list){
     this->omega_list = omega_list;
 }
 
+
 void Non_interact::write_to_file(){
     mat energy = ones<vec>(3);
     mat known_values = vec({3.0, 7.0, 11.0});
     int iterations = 0;
 
+    /*
     double bee = 1.44;
     double m = 0.51099*pow(10,6);
     double hbarc2 =pow(1240.0/(2*M_PI),2);
     double alfa =   hbarc2/(m*bee);
     double E = hbarc2/(m*alfa*alfa);
-
+    */
 
     double time_jacobi;
     //string str = to_string(omega);
@@ -36,18 +44,18 @@ void Non_interact::write_to_file(){
 
     outfile.open(filename);
 
-    double omega = 0;
-    double rho_max = 4.79;
+    double omega;
+    double rho_max ;
     int stopp = size(omega_list)[0];
-    outfile << "   $\\omega_r$  &  $E_0 $ (eV)   &       $E_1$  (eV)  &      $E_2$ (eV)\\\\"<<endl;
+    outfile << "   $\\omega_r$  &  $\\lambda_0 $   &       $\\lambda_1$  &      $\\lambda_2$ \\\\"<<endl;
     outfile << "\\hline\\"<<endl;
 
     for(int i = 0;i<stopp;i++){
     omega = omega_list(i);
-    if(i == 0) {
+    if(omega == 0) {
         ofstream outfile1;
         ofstream outfile2;
-
+        rho_max = 4.79;
 
         double time_arma;
         string  filename1 = "../../outfiles/result_eigval.txt";
@@ -57,9 +65,9 @@ void Non_interact::write_to_file(){
         outfile2.open(filename2);
         outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$  \\\\  "<<endl;
         outfile1 << "\\hline"<< endl;
-        outfile2 <<"N       &   # Similarity transforms   &  time Jacobi (s)      & time Armadillo (ms)     \\\\       "<<endl;
+        outfile2 <<"N       &   Transforms   &  time Jacobi (s)      & time Armadillo (ms)     \\\\       "<<endl;
         outfile2 << "\\hline"<< endl;
-
+        outfile2 << setprecision(3);
         for (int i=0; i<size(n_list)[0]; i++){
             iterations = 0;
             time_arma = 0;
@@ -69,8 +77,10 @@ void Non_interact::write_to_file(){
             armadillo_ref(n, rho_max, time_arma, omega);
 
 
-            outfile1 << n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
-            outfile2 << n<< "      &   "   << iterations  <<  "      &   " << time_jacobi << "      &   " << time_arma*1e3<<"\\\\" << endl;
+            outfile1 <<n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
+
+            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << fixed<< time_jacobi << "      &   " << time_arma*1e3<<"\\\\" << endl;
+
 
             cout << "time arma:  "<<time_arma <<endl;
             cout << "time jacobi:  "<<time_jacobi <<endl;
@@ -89,12 +99,15 @@ void Non_interact::write_to_file(){
     else{
 
         if (omega<0.1) rho_max = 50;
-        cout << rho_max <<endl;
+        else rho_max = 7.9; //rho_max = 4.79;
+
+
+        cout << "Rho = "<<rho_max <<endl;
         double n = N_omega;
         Solve_SE_twoparticle(n, energy, iterations, time_jacobi, rho_max, omega);
 
 
-        outfile << omega << "       &        "   << energy(0)*E <<"    &   "<< energy(1)*E <<"   &    "<< energy(2)*E<<"\\\\" <<endl;
+        outfile << defaultfloat<<omega << "       &        " << setprecision(3) <<fixed << energy(0) <<"    &   "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
 
 
     }
@@ -158,7 +171,7 @@ void Non_interact::Jacobi(mat& A, mat& R, int n, int& iterations){
 
     R = eye<mat>(n,n);
     // Test: Is it finding the maximum value?
-    int statement = 1;//test_off_diagonal();
+    int statement = test_off_diagonal();
     if (statement == 1){
         while(max_ > tol && iterations < max_iterations){
             max_ = norm_off_diag( A, k, l, n);
@@ -284,16 +297,9 @@ int Non_interact::test_off_diagonal(){
 
     double max_a_kl =0;
     int n = size(A)[0];
-
-    for(int i = 0; i<n;i++){
-        for(int j=i+1; j<n; j++){
-           double aij = fabs(A(i,j));
-            if(aij > max_a_kl){
-                max_a_kl = aij;
-            }
-        }
-    }
-    if (abs(max_a_kl- 3.0) <= pow(10,-4)){
+    int k =0; int l = 0;
+    norm_off_diag(A, k, l,  n);
+    if (abs(  A(k,l)- 3.0) <= pow(10,-8)){
         return 1;
     }
     else{
