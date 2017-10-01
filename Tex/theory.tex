@@ -1,6 +1,6 @@
 \subsection{Dimensionless and scaled Schrödinger Equation}
 
-In this report we are looking at how to solve an eigenvalue problem using Jacobi's method. The eigenvalue problem we will solve is the two particle Schrödinger Equation for the ground state and the harmonic oscillator potential. 
+In this report we are looking at how to solve an eigenvalue problem using Jacobi's method. The eigenvalue problem we will solve is the Schrödinger Equation for the ground state and the harmonic oscillator potential. 
 We then start out with the one particle radial Schrödinger Equation (Equation \ref{eq:radial_SE} for the ground state which means that the quantum number $l = 0$. Here $R$ is the radial part of the wave function, $r$ is the distance from the origin to the electron, $m$ is the mass of the particle, $\hbar$ is Planck's constant and $E$ is the energy. The harmonic oscillator potential is shown in Equation \ref{eq:harmonic_potential}. Here $k$ is the wave number and $\omega$ is the oscillator frequency.
 
 \begin{equation}\label{eq:radial_SE}
@@ -27,6 +27,9 @@ If we set $ \frac{m\alpha^4}{\hbar^2}k = 1$ then $\alpha = \left(\frac{\hbar^2}{
 \begin{equation}\label{eq:scaled_SE}
 -\frac{d^2}{d\rho^2}u(\rho ) + \rho^2 u(\rho ) = \lambda u(\rho ) \hspace{0.5cm} \text{where }\lambda = \frac{2m\alpha^2}{\hbar^2}E
 \end{equation}
+
+This problem has an analytical solution and the three lowest eigenvalues for the ground state are $\lambda_1 = 3$, $\lambda_2 = 7$ and $\lambda_3 = 11$. 
+
 \subsection{An eigenvalue problem}
 
 We have the scaled and dimensionless Schrödinger Equation (Equation \ref{eq:scaled_SE}) and the next move is to make it into a numerical eigenvalue problem. We start by making the continuous function $u(\rho )$ a discrete number of values $u_i = u(\rho_i)$. Here $\rho_i = \rho_0 + ih$ where $h$ is the step length  $h = \frac{\rho_{max}}{N}$, $N$ is the number of mesh points and $\rho_0 = 0$. $\rho_{max}$ should be infinitely big which is not possible, since $r \in [0, \infty )$, but we will come back to that in the method part of the report. Using the expression for the second derivative we get:
@@ -52,6 +55,32 @@ u_1 \\ u_2 \\ u_3 \\ \vdots \\ u_{N-1} \\ u_N \\
 \end{equation}
 
 where $d_i = \frac{2}{h^2} + \rho_i^2$ and $e_i = -\frac{1}{h^2}$.
+
+\subsection{Interacting case}
+
+In this report we will also study the eigenvalue problem that is the Schrödinger equation of two particles interacting with each other by a Coulomb potential. With relative and center-off-mass coordinates, a new scaling and insertion of the Coulomb interaction the two particle Schrödinger Equation is shown in Equation \ref{eq:two_particle}.
+
+\begin{equation}\label{eq:two_particle}
+-\frac{d^2}{d\rho^2}\psi (\rho )+ \omega_r^2\rho^2\psi (\rho ) + \frac{1}{\rho}\psi (\rho ) = \lambda \psi (\rho )
+\end{equation}
+
+Here $\rho = r/\alpha$ as before, $\omega = \frac{1}{4}\frac{mk}{\hbar^2}\alpha^4$ and reflects the strength of the oscillator, $\alpha = \frac{\hbar^2}{m \beta e^2}$ to get the right scaling, $\beta$ is Coulomb's constant, $\lambda = \frac{m\alpha^2}{\hbar^2}E$ and $E$ is the energy.
+
+Because of good scaling, this case is almost the same eigenvalue problem as before. The only change is the potential, $V_i$, which is now $V_i = \omega_r^2 \rho_i^2+ \frac{1}{\rho_i}$ instead of only $V_i = \rho_i$. That means that the diagonal of the matrix changes to $d_i = \frac{2}{h^2} + \omega_r^2\rho_i^2 + \frac{1}{\rho_i}$.
+
+This equation has analytical solutions for some frequencies and the resulting energies are listed in \ref{tab:analytical_energies}.
+
+\begin{table}[H]\caption{This table lists the eneries of the three lowest states in the ground state for two electrons in the harmonic potential and Coulomb potential.}\label{tab:analytical_energies}
+\begin{tabular}{cccc}\hline
+Frequency & Energies [eV]\\
+$\omega_r$ & $E_1$ & $E_2$ & $E_3$\\
+0,001 & 1 & 2 & 3\\
+0,5 & 1 & 2 & 3\\
+1,0 & 1 & 2 & 3\\
+5,0 & 1 & 2 & 3\\
+10,0 & 1 & 2 & 3\\
+\end{tabular}
+\end{table}
 
 \subsection{Jacobi's method}
 
