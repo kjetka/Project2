@@ -58,7 +58,7 @@ where $d_i = \frac{2}{h^2} + \rho_i^2$ and $e_i = -\frac{1}{h^2}$.
 
 \subsection{Interacting case}
 
-In this report we will also study the eigenvalue problem that is the Schrödinger equation of two particles interacting with each other by a Coulomb potential. With relative and center-off-mass coordinates, a new scaling and insertion of the Coulomb interaction the two particle Schrödinger Equation is shown in Equation \ref{eq:two_particle}.
+In this report we will also study the eigenvalue problem that is the Schrödinger equation of two particles interacting with each other by a Coulomb potential. With relative and center-off-mass coordinates and discarding the center-off-mass energy, a new scaling and insertion of the Coulomb interaction the two particle Schrödinger Equation is shown in Equation \ref{eq:two_particle}.
 
 \begin{equation}\label{eq:two_particle}
 -\frac{d^2}{d\rho^2}\psi (\rho )+ \omega_r^2\rho^2\psi (\rho ) + \frac{1}{\rho}\psi (\rho ) = \lambda \psi (\rho )
@@ -71,9 +71,9 @@ Because of good scaling, this case is almost the same eigenvalue problem as befo
 This equation has analytical solutions for some frequencies and the resulting energies are listed in \ref{tab:analytical_energies}.
 
 \begin{table}[H]\caption{This table lists the eneries of the three lowest states in the ground state for two electrons in the harmonic potential and Coulomb potential.}\label{tab:analytical_energies}
-\begin{tabular}{cccc}\hline
-Frequency & Energies [eV]\\
-$\omega_r$ & $E_1$ & $E_2$ & $E_3$\\
+\begin{tabular}{cccc}
+Frequency [] & & Energies & [eV]\\
+$\omega_r$ & $E_1$ & $E_2$ & $E_3$\\\hline
 0,001 & 1 & 2 & 3\\
 0,5 & 1 & 2 & 3\\
 1,0 & 1 & 2 & 3\\

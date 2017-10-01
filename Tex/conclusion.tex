@@ -1,0 +1,12 @@
+We used Jacobi's method to solve the eigenvalue problems of finding the energy of a single electron in a harmonic potential and two electrons in a harmonic potential that are interacting by a Coulomb potential. First we scaled the different Schrödinger equations and made them dimensionless. We then rewrote the equation to a matrix equation. Then the problem ended up being an eigenvalue problem with a tridiagonal matrix. The scaling made it easy to adapt the algorithm for both cases  with just changing the matrix involved, in this case the term for the potential. Two unit tests made sure the program was doing what it was supposed to do and the results were the energies of the ground state of the single electron and the energies of the ground state for the two electrons for different oscillator frequencies. The results were compared with the analytical values and the accuracy was down to the third decimal point with 400 mesh point and a step length of ??. The CPU time of Jacobi's method was compared to armadillo's solver for eigenvalues and our algorithm using Jacobi's method was very slow compared to armadillo's. 
+
+How could the program be better?
+
+- Investigate where the program uses a lot of time.
+
+How to better the method:
+
+- Specialize for a tridiagonal matrix?
+
+
+
