@@ -62,7 +62,7 @@ void Non_interact::write_to_file(){
         outfile2.open(filename2);
         outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$  \\\\  "<<endl;
         outfile1 << "\\hline"<< endl;
-        outfile2 <<"N       &   Transforms   &  time Jacobi (s)      & time Armadillo (ms)     \\\\       "<<endl;
+        outfile2 <<"N       &   Transforms   &  time Jacobi (s)      & time Armadillo (s)     \\\\       "<<endl;
         outfile2 << "\\hline"<< endl;
         outfile2 << setprecision(3);
         for (int i=0; i<size(n_list)[0]; i++){
@@ -76,7 +76,7 @@ void Non_interact::write_to_file(){
 
             outfile1 <<n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
 
-            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << fixed<< time_jacobi << "      &   " << time_arma*1e3<<"\\\\" << endl;
+            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << fixed<< time_jacobi << "      &   " <<scientific<<  time_arma<<"\\\\" << endl;
 
 
             cout << "time arma:  "<<time_arma <<endl;
@@ -287,8 +287,6 @@ int Non_interact::test_eigensolver(){
 
 int Non_interact::test_off_diagonal(){
     mat A = {{1, 3, 1},{2, 1, 0.5},{1.5, 6, 2}};
-
-    double max_a_kl =0;
     int n = size(A)[0];
     int k =0; int l = 0;
     norm_off_diag(A, k, l,  n);
