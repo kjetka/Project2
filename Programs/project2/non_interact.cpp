@@ -24,14 +24,16 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     int iterations = 0;
 
-    /*
+
     double bee = 1.44;
     double m = 0.51099*pow(10,6);
     double hbarc2 =pow(1240.0/(2*M_PI),2);
     double alfa =   hbarc2/(m*bee);
     double E = hbarc2/(m*alfa*alfa);
-    */
 
+    cout << 3*E<< endl;
+    cout <<7*E<<endl;
+    cout << 11*E<<endl;
     double time_jacobi;
     string filename = string("../../outfiles/results_omega.txt");
 
@@ -76,7 +78,7 @@ void Non_interact::write_to_file(){
 
             outfile1 <<n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
 
-            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << fixed<< time_jacobi << "      &   " <<scientific<<  time_arma<<"\\\\" << endl;
+            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << scientific<< time_jacobi << "      &   " <<  time_arma<<"\\\\" << endl;
 
 
             cout << "time arma:  "<<time_arma <<endl;
@@ -234,12 +236,12 @@ void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
 
      if(a_kl != 0.0){
         tau = (a_ll-a_kk)/(2.0*a_kl);
-        if(tau>= 0){
+        if(tau>= 0)
              t = 1.0/(tau + sqrt(1+tau*tau));
-        }
-        else{
+
+        else
             t = -1.0/(- tau + sqrt(1+tau*tau));
-        }
+
 
          c = 1.0/(    sqrt(1  +  t*t)   );
          s = t*c;

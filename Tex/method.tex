@@ -19,26 +19,28 @@ Our matrix \textbf{A} is symmetric, which means that $ \textbf{A}^T = \textbf{A}
 
 Thus  it is sufficient to search only the elements above the diagonal for the highest valued element in the matrix, instead of the entire matrix. This greatly speeds up the searching-algorithm, as you half the number of elements to read in order to find the greatest value. 
 
+Depending on the sign of the $ \pm $ in equation \ref{eq: t} one either gets a relatively high value for t or a small one. We chose to only use the smallest solution of that equation, see snippet below.  This means that we choose the c  which will be closest to unity  and the value of $s$ which will be the smallest, see equations \ref{eq: c} and \ref{eq: s}. This against means we each time chose the similarity transform that rotates the matrix A the most. 
 
 
-\textbf{Velger for hvilken $ \tau $ har $ \mp $?????
-Hvorfor deler på?????
-}
+\begin{lstlisting}[caption={Determining $t$ in the program},label=kode]
+if(tau>= 0)
+	t = 1.0/(tau + sqrt(1+tau*tau));
+
+else
+	t = -1.0/(- tau + sqrt(1+tau*tau));
+\end{lstlisting}
+
+A computer has a finite number of digits to describe a number. For high values of $ \tau $  equation \ref{eq: t} will turn to $ t = \tau \pm \tau $, as $ \sqrt{1+\tau^2} \simeq \tau $ for large $ \tau $. To minimize this effect we rewrote the equation: 
 
 \begin{align}
 t &= \frac{(-\tau \pm \sqrt{1+\tau^2})(-\tau \mp \sqrt{1+ \tau^2})}{-\tau \mp \sqrt{1+\tau^2}}\\
 &= \frac{-1}{-\tau \mp \sqrt{1+\tau^2}}
 \end{align}
 
-	Metode
-Algorigmer: Jacobi, rhomax
-valg av epsilon ("0")
 
+We chose to stop the algorithm when all the off-diagonal elements in A where smaller than $ \epsilon = 10^{-10} $.  For greater accuracy this number could be smaller, but this gives a decent payoff between time and accuracy. 
 
-
-
-
-
+The strength of the oscillator potential is reflected in $ \omega_r $. If $ \omega_r $ is small, the wave function will be less confined and will thus need a higher $ \rho_{max} $ than for strongly confined wave functions. This leads to choosing  $   \rho_{max} = 50 $ for $  \omega<0.1 $ and $ \rho_{max} = 7.9 $ for the other values of $ \omega_r $. 
 
 
 \subsection{Unit tests}
