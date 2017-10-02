@@ -2,6 +2,7 @@ from __future__ import division
 from numpy import * 
 from numpy.linalg import *
 from matplotlib.pyplot import*
+import matplotlib.ticker
 from scipy.optimize import curve_fit
 
 import glob, os
@@ -43,55 +44,21 @@ B0 = 2/9*(1/a0)*beta
 
 x_plot = np.linspace(n[0],n[-1],100)
 y_fit = popt[1]+popt[0]*(x_plot-popt[2])**2
+y_fit = popt[1]+popt[0]*(x_plot)**2
 
 
 figure()
-plot(n, iterations, 'r*-', label ='Calculated values')
 
+plot(n, iterations, 'r*-', label ='Calculated values')
 plot(x_plot,y_fit, label ='Approximated function')
+ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
 xlabel('Mesh points N')
 ylabel('No. Similarity transforms')
-legend()
+legend(loc = 2)
+title('Increase in Similarity transforms')
 savefig('fit.pdf')
-show()
 
-figure()
 
-plot(log10(n),log10(iterations), label = 'Time arma')
-legend()
-show()
 
-"""
-
-for k in range(len(filer)):
-
-	nummerisk = []
-	analytisk = []
-	feil =[]
-	nummerisk.append(0)
-	analytisk.append(0)
-
-	with open(filer[k]) as infile:
-		for i in range(3):
-			firstline = infile.readline()
-		
-		for line in infile:
-			thisline = line.split()
-			nummerisk.append(thisline[0])
-			analytisk.append(thisline[1])
-			feil.append(thisline[2])
-	nummerisk.append(0)
-	analytisk.append(0)
-	n = len(nummerisk)-2
-	print n
-
-	x = linspace(0,1,n+2)
-	figure(k)
-	plot(x,nummerisk, label = "Numerical")
-	plot(x, analytisk, label = "Analytical")
-	legend()
-	title("Plot with the special algorithm, h = %.0e" %(1/float(n)))
-	xlabel("x"); ylabel("y")
-	savefig("n_%.0f.pdf" %n)
-"""
-
+print "a0 = ",popt[0], 'x0 = ', popt[2]
