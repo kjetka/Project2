@@ -46,7 +46,7 @@ void Non_interact::write_to_file(){
     double omega;
     double rho_max ;
     int stopp = size(omega_list)[0];
-    outfile << "   $\\omega_r$  &  $\\lambda_0 $   &       $\\lambda_1$  &      $\\lambda_2$ \\\\"<<endl;
+    outfile << "   $\\omega_r$  &  $\\lambda_1 $   &       $\\lambda_2$  &      $\\lambda_3$ \\\\"<<endl;
     outfile << "\\hline\\"<<endl;
 
     for(int i = 0;i<stopp;i++){
@@ -97,7 +97,7 @@ void Non_interact::write_to_file(){
 
     else{
 
-        if (omega<0.1) rho_max = 50;
+
         else rho_max = 7.9; //rho_max = 4.79;
 
 
