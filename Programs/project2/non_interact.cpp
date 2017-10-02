@@ -13,7 +13,6 @@ using namespace arma;
 using namespace std;
 
 Non_interact::Non_interact(vec n_list,int N_omega, vec omega_list){
-    //this->rho_max = rho_max;
     this->n_list = n_list;
     this-> N_omega = N_omega;
     this->omega_list = omega_list;
@@ -34,8 +33,6 @@ void Non_interact::write_to_file(){
     */
 
     double time_jacobi;
-    //string str = to_string(omega);
-    //str.resize(4);
     string filename = string("../../outfiles/results_omega.txt");
 
 
@@ -145,7 +142,6 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
             eigenvalues(i) = A(i,i);
         }
 
-  //      eigenvalues.print("lambda");
 
         uvec eigenindex =  sort_index(eigenvalues);
 
@@ -195,11 +191,10 @@ void Non_interact::make_A(int n, double rho_max, mat& A, double omega){
     for(int i = 0; i<n;i++){
             rho = (i+1)*h;
         if(omega == 0){
-            //rho(i) = rho;
             V(i) = rho*rho;
         }
         else{
-            V(i) = omega*omega*rho*rho + 1/rho; //OBS! Blir rho veldig liten? evt veldig stor?
+            V(i) = omega*omega*rho*rho + 1/rho;
         }
     }
 
@@ -216,7 +211,6 @@ void Non_interact::make_A(int n, double rho_max, mat& A, double omega){
 
 double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
     double max_a_kl =0;
-    // int n = size(A)[0];
 
     for(int i = 0; i<n;i++){
         for(int j=i+1; j<n; j++){
@@ -232,7 +226,6 @@ double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
 }
 
 void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
-    //int n = size(A)[0];
     double s,c, t, tau, a_ll, a_kk, a_kl;
     double a_ik, a_il, r_ik, r_il;
 

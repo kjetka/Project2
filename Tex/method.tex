@@ -6,25 +6,40 @@ c &= \cos \theta = \frac{1}{\sqrt{1+\tan^2\theta}} = \frac{1}{\sqrt{1+t^2}}\\
 s &= \sin \theta = \tan \theta \cos \theta = t c\\
 \end{align*}
 
-\subsection{The algorithm}
+\subsection{The Jacobi algorithm}
 
+The essence of the algorithm is to continue to do similarity transforms on the matrix A until it is more or less diagonalized. Because the off-diagonal elements will approach $ 0 $, it is sufficient to count until the largest off-diagonal element is $ < 10^{-10} $. 
 
-
-	Metode
-Algorigmer: Jacobi, rhomax
-valg av epsilon ("0")
-
-Forelesning: Konvergens etter mellom 12n3 og 20n3, vi har mye kjappere!!!!! - fordi sym!!!
-
-
-Our matrix \textbf{A} is symmetric, meaning that $ \textbf{A}^T = \textbf{A} $. From this it follows that the product $ \textbf{S}^TAS $ also is symmetric, as is shown under:
+Our matrix \textbf{A} is symmetric, which means that $ \textbf{A}^T = \textbf{A} $. From this it follows that the product $ \textbf{S}^TAS $ also is symmetric, as is shown under:
 
 \begin{align}
 \textbf{S}^T\textbf{AS} &= \textbf{S}^T\textbf{A}^T(\textbf{S}^T)^T\\
 &= \textbf{S}^T\textbf{AS} 
 \end{align}
 
-Thus is it sufficient to search only the elements above the diagonal for the highest valued element in the matrix, instead of the entire matrix. 
+Thus  it is sufficient to search only the elements above the diagonal for the highest valued element in the matrix, instead of the entire matrix. This greatly speeds up the searching-algorithm, as you half the number of elements to read in order to find the greatest value. 
+
+
+
+Velger for hvilken $ \tau $ har $ \mp $?????
+Hvorfor deler på?????
+OBS: FEIL I TEORI : skal være -tau!!!
+
+
+
+\begin{align}
+t &= \frac{(-\tau \pm \sqrt{1+\tau^2})(-\tau \mp \sqrt{1+ \tau^2})}{-\tau \mp \sqrt{1+\tau^2}}\\
+&= \frac{-1}{-\tau \mp \sqrt{1+\tau^2}}
+\end{align}
+
+	Metode
+Algorigmer: Jacobi, rhomax
+valg av epsilon ("0")
+
+
+
+
+
 
 
 
@@ -39,7 +54,4 @@ The other unit test we utilized was to check that our algorithm to find the larg
 
 
 
-Other tests: Orthogonality, norm(A) = norm(B), symmetric
 
-
-\textbf{HVORFOR SØKER VI BARE ØVRE HALVDEL???????????????????????????????????????}
