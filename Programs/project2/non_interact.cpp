@@ -13,7 +13,6 @@ using namespace arma;
 using namespace std;
 
 Non_interact::Non_interact(vec n_list,int N_omega, vec omega_list){
-    //this->rho_max = rho_max;
     this->n_list = n_list;
     this-> N_omega = N_omega;
     this->omega_list = omega_list;
@@ -25,17 +24,17 @@ void Non_interact::write_to_file(){
     mat known_values = vec({3.0, 7.0, 11.0});
     int iterations = 0;
 
-    /*
+
     double bee = 1.44;
     double m = 0.51099*pow(10,6);
     double hbarc2 =pow(1240.0/(2*M_PI),2);
     double alfa =   hbarc2/(m*bee);
     double E = hbarc2/(m*alfa*alfa);
-    */
 
+    cout << 3*E<< endl;
+    cout <<7*E<<endl;
+    cout << 11*E<<endl;
     double time_jacobi;
-    //string str = to_string(omega);
-    //str.resize(4);
     string filename = string("../../outfiles/results_omega.txt");
 
 
@@ -65,7 +64,7 @@ void Non_interact::write_to_file(){
         outfile2.open(filename2);
         outfile1 << "N   &   $\\lambda_1$  &  $\\lambda_2$  &  $\\lambda_3$  \\\\  "<<endl;
         outfile1 << "\\hline"<< endl;
-        outfile2 <<"N       &   Transforms   &  time Jacobi (s)      & time Armadillo (ms)     \\\\       "<<endl;
+        outfile2 <<"N       &   Transforms   &  time Jacobi (s)      & time Armadillo (s)     \\\\       "<<endl;
         outfile2 << "\\hline"<< endl;
         outfile2 << setprecision(3);
         for (int i=0; i<size(n_list)[0]; i++){
@@ -79,7 +78,7 @@ void Non_interact::write_to_file(){
 
             outfile1 <<n << "     &          " <<  energy(0) <<"   &    "<< energy(1) <<"   &    "<< energy(2)<<"\\\\" <<endl;
 
-            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << fixed<< time_jacobi << "      &   " << time_arma*1e3<<"\\\\" << endl;
+            outfile2 <<defaultfloat<< n<< "      &   "   << iterations  <<  "      &   " << scientific<< time_jacobi << "      &   " <<  time_arma<<"\\\\" << endl;
 
 
             cout << "time arma:  "<<time_arma <<endl;
@@ -145,7 +144,6 @@ void Non_interact::Solve_SE_twoparticle(int n, mat& energy, int& iterations, dou
             eigenvalues(i) = A(i,i);
         }
 
-  //      eigenvalues.print("lambda");
 
         uvec eigenindex =  sort_index(eigenvalues);
 
@@ -195,11 +193,10 @@ void Non_interact::make_A(int n, double rho_max, mat& A, double omega){
     for(int i = 0; i<n;i++){
             rho = (i+1)*h;
         if(omega == 0){
-            //rho(i) = rho;
             V(i) = rho*rho;
         }
         else{
-            V(i) = omega*omega*rho*rho + 1/rho; //OBS! Blir rho veldig liten? evt veldig stor?
+            V(i) = omega*omega*rho*rho + 1/rho;
         }
     }
 
@@ -216,7 +213,6 @@ void Non_interact::make_A(int n, double rho_max, mat& A, double omega){
 
 double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
     double max_a_kl =0;
-    // int n = size(A)[0];
 
     for(int i = 0; i<n;i++){
         for(int j=i+1; j<n; j++){
@@ -232,7 +228,6 @@ double Non_interact::norm_off_diag(mat& A, int& k, int& l, int n){
 }
 
 void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
-    //int n = size(A)[0];
     double s,c, t, tau, a_ll, a_kk, a_kl;
     double a_ik, a_il, r_ik, r_il;
 
@@ -241,12 +236,12 @@ void Non_interact::Jacobi_rot(mat& A, mat& R, int k, int l, int n){
 
      if(a_kl != 0.0){
         tau = (a_ll-a_kk)/(2.0*a_kl);
-        if(tau>= 0){
+        if(tau>= 0)
              t = 1.0/(tau + sqrt(1+tau*tau));
-        }
-        else{
+
+        else
             t = -1.0/(- tau + sqrt(1+tau*tau));
-        }
+
 
          c = 1.0/(    sqrt(1  +  t*t)   );
          s = t*c;
@@ -294,8 +289,6 @@ int Non_interact::test_eigensolver(){
 
 int Non_interact::test_off_diagonal(){
     mat A = {{1, 3, 1},{2, 1, 0.5},{1.5, 6, 2}};
-
-    double max_a_kl =0;
     int n = size(A)[0];
     int k =0; int l = 0;
     norm_off_diag(A, k, l,  n);
