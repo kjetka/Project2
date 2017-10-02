@@ -1,11 +1,28 @@
-\subsection{$\rho_{max}$}
-What it represents. How to pick a good $\rho_{max}$ and why it needs to be changed.
+\subsection{The boundaries - $\rho_{max}$}
+
+Because we used the radial Schrödinger Equation our boundary conditions are given by $r\in[0,\infty)$ and since $\rho = r/\alpha$ the same boundary conditions are still relevant. That means that $\rho_{max}$ should be $\infty$ that is not possible however on a computer.
+
+Therefore an approximation of the boundary conditions had to be made. We chose $\rho_{max} = ?? $ for all our calculations except when $\omega_r = 0.01$ then we changed it to be $\rho_{max} = 50$. The small frequency made the wave function smear out, and we needed a bigger interval to make sure we had the whole function in our calculations. 
+
+We also noticed that the result was very dependent on $\rho_{max}$ especially if we chose a too small value. We used our knowledge of the analytical result to find a good $\rho_{max}$, but without this knowledge it would have been difficult. It is important to make sure that the boundary conditions are reflecting the reality in a good way to get the right results. 
 
 \subsection{Efficiency of method}
 
+As we can see in Table \ref{tab:time} the CPU time of our Jacobi's method is big compared to armadillo's eigenvalue solver function. We needed 400 mesh points to get a good accuracy for the eigenvalues and if we would have needed more it would have been a very time consuming job.
+
+The number of similarity transformations was big and it give a picture of why the CPU time is big. 
+
+This might indicate that 
+
 Discuss the CPU time and the convergence. Not a perfect method?
 
-\subsection{Unit test}
+Discuss iterations (symmetric matrix + tridiagonal).
+
+Choose of tolerance.
+
+Specialize the algorithm to a tridiagonal matrix?
+
+\subsection{Unit test. Kjetil}
 
 Good unit test? Better/other unit tests?
 
