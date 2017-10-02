@@ -2,8 +2,12 @@ from __future__ import division
 from numpy import * 
 from numpy.linalg import *
 from matplotlib.pyplot import*
+from scipy.optimize import curve_fit
+
 import glob, os
 
+def func(x,a0,e0,x0):
+   return (e0+(a0*(x-x0)**2))
 
 def filer_funk(stikkord): #Stikkord = hvilke filer, Skanntype = n
 
@@ -20,18 +24,42 @@ def filer_funk(stikkord): #Stikkord = hvilke filer, Skanntype = n
 	return filer_brukes
 
 filer = filer_funk("time")
-print filer
+fil = filer[0]
+n = []
+iterations =[]
+with open(fil) as infile:
+	for i in range(2):
+		firstline = infile.readline()
+	for line in infile:
+		thisline = line.split('&')
+		n.append(float(thisline[0]))
+		iterations.append(float(thisline[1]))
+
+p0=[30,-12,2.8]
+popt,pcov = curve_fit(func,n,iterations,p0)
+a0 = popt[2]
+beta = popt[1]
+B0 = 2/9*(1/a0)*beta
+
+x_plot = np.linspace(n[0],n[-1],100)
+y_fit = popt[1]+popt[0]*(x_plot-popt[2])**2
 
 
-n,time_jac, time_arma = loadtxt(filer[0],delimiter = '&', unpack=True, skiprows=2)
+figure()
+plot(n, iterations, 'r*-', label ='Calculated values')
 
-time_arma = time_arma*1e-3
-
-semilogy(n,time_arma, label = 'Time arma')
-semilogy(n, time_jac, label = 'Time jacobi')
+plot(x_plot,y_fit, label ='Approximated function')
+xlabel('Mesh points N')
+ylabel('No. Similarity transforms')
 legend()
+savefig('fit.pdf')
 show()
 
+figure()
+
+plot(log10(n),log10(iterations), label = 'Time arma')
+legend()
+show()
 
 """
 

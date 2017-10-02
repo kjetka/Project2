@@ -1,4 +1,4 @@
-   $\omega_r$  &  $\lambda_0 $   &       $\lambda_1$  &      $\lambda_2$ \\
+   $\omega_r$  &  $\lambda_1 $   &       $\lambda_2$  &      $\lambda_3$ \\
 \hline\
 0.01       &        0.106    &   0.142   &    0.178\\
 0.05       &        0.350    &   0.532   &    0.719\\

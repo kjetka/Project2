@@ -6,6 +6,7 @@
 	\end{tabular}
 \end{table}
 
+The eigenvalues converges towards the excact solutions  $ \lambda_1=3, \lambda_2 =7  $ and $ \lambda_3 =11 $ for each increase in mesh size  ($ N\times N $) in table \ref{tab:eigval}. The lower the  eigenvalue, the quicker it converges. 
 
 The energies corresponding to the dimensionless energies $\lambda_1 = 3 $, $\lambda_2 = 7 $ and $\lambda_3 = 11$ are $ 81.6 $ eV,  $ 190.4 $ eV and $ 299.3 $ eV respectively. 
 
@@ -15,6 +16,10 @@ The energies corresponding to the dimensionless energies $\lambda_1 = 3 $, $\lam
 		\input{../Outfiles/result_time.txt}
 	\end{tabular}
 \end{table}
+
+17171
+As expected, the brute force method of the Jacobi algorithm is much slower than the algorithm used by armadillo and LAPACK. LAPACK is up to approximately 2 500 times faster. The higher calculation costs of the Jacobi method is also reflected in the amount of similarity transforms required.  
+
 
 \begin{table}[H]\caption{Eigenvalues for the interacting case. All the calculations are done with a mesh size of N=400. $ \rho_{max} $ was set to $ 7.9 $ for all $ \omega_r $, except for $ \omega_r  = 0.01$ ( $ \rho_{max} =50$). }
 	\label{tab:omega}

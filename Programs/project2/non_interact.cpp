@@ -97,7 +97,7 @@ void Non_interact::write_to_file(){
 
     else{
 
-
+       if (omega<0.1) rho_max = 50;
         else rho_max = 7.9; //rho_max = 4.79;
 
 
