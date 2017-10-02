@@ -12,16 +12,11 @@ As we can see in Table \ref{tab:time} the CPU time of our Jacobi's method is big
 
 The number of similarity transformations was big and it give a picture of why the CPU time is big. The similarity transformations increase a lot with the number of mash point, so if the method converged with a lower number of mesh points, it could decrease the CPU time.  
 
-This might indicate that 
+No matter how we changed the number of mesh points and $\rho_{max}$, we could not get a better accuracy then three decimal points, with at least a reasonable CPU time. We did not try for mesh points resulting in CPU times over four minutes. In our mind, that is to long.  
 
-Discuss the CPU time and the convergence. Not a perfect method?
+This might indicate that we should have chosen another method to solve this eigenvalue problem, if it was not a project to learn about programming.
 
-Discuss iterations (symmetric matrix + tridiagonal).
-
-Choose of tolerance.
-
-Specialize the algorithm to a tridiagonal matrix?
-
+A interesting point we noticed was that our number of similarity transformations was lower then the one presented in the lectures for Jacobi's method.  (Should we include the values?) This might be because we have a tridiagonal matrix, our matrix is full of zeros already, and because we exploit the fact that our matrix is symmetric when searching for the largest element, like mentioned in method. The number of similarity transformations are also dependent on the tolerance of when a number is so small that we reckon it to be zero. Increasing the tolerance would give fewer similarity transformations. 
 \subsection{Unit test. Kjetil}
 
 Good unit test? Better/other unit tests?
