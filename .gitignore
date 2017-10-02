@@ -22,6 +22,7 @@ temp*
 *.nav
 *.out
 *.toc
+*.gz
 *.snm
 *.vrb
 # eclipse files:
