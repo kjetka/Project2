@@ -22,6 +22,7 @@ temp*
 *.nav
 *.out
 *.toc
+*.gz
 *.snm
 *.vrb
 # eclipse files:
@@ -46,7 +47,7 @@ doc/Projects/2016/Project2/.project2_2016.copyright
 *.exerinfo
 
 *.dlog
-
+*.stash
 
 
 *.user
