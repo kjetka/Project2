@@ -16,7 +16,9 @@ No matter how we changed the number of mesh points and $\rho_{max}$, we could no
 
 This might indicate that we should have chosen another method to solve this eigenvalue problem, if it was not a project to learn about programming.
 
-A interesting point we noticed was that our number of similarity transformations was lower then the one presented in the lectures for Jacobi's method.  (Should we include the values?) This might be because we have a tridiagonal matrix, our matrix is full of zeros already, and because we exploit the fact that our matrix is symmetric when searching for the largest element, like mentioned in method. The number of similarity transformations are also dependent on the tolerance of when a number is so small that we reckon it to be zero. Increasing the tolerance would give fewer similarity transformations. 
+A interesting point we noticed was that our number of similarity transformations was lower then the one presented in the lectures for Jacobi's method. Here it was presented that a general, real and symmetric matrix requires $ 3n^2-5n^2 $ similarity transformations. In this specific case of a  tridiagonal matrix, figure \ref{fig:n} shows that it converges after $ 1.81n^2 $ similarity transforms. 
+
+  This might be because we have a tridiagonal matrix, our matrix is full of zeros already, and because we exploit the fact that our matrix is symmetric when searching for the largest element, like mentioned in method. The number of similarity transformations are also dependent on the tolerance of when a number is so small that we reckon it to be zero. Increasing the tolerance would give fewer similarity transformations. 
 \subsection{Unit test. Kjetil}
 
 Good unit test? Better/other unit tests?
