@@ -21,5 +21,7 @@ A interesting point we noticed was that our number of similarity transformations
   This might be because we have a tridiagonal matrix, our matrix is full of zeros already, and because we exploit the fact that our matrix is symmetric when searching for the largest element, like mentioned in method. The number of similarity transformations are also dependent on the tolerance of when a number is so small that we reckon it to be zero. Increasing the tolerance would give fewer similarity transformations. 
 \subsection{Unit test. Kjetil}
 
-Good unit test? Better/other unit tests?
+Our unit tests checked that the entire jacobi algorithm gave correct answers when presented to a matrix with known eigenvalues and that our searching algorithm found the largest off-diagonal element. The strength of the first test is that it checks the entire system, but will not indicate what is wrong. This could be solved by writing more unit test, like checking that the norm of the matrix was conserved through the transform, which would fail if there where for instance round-off-errors.
+
+If the algorithm were to be used on a different matrix it would be useful to check that this matrix is symmetric. In addition the column-vectors of the transformed matrix A must be orthogonal if the transformation is to be unitary. A simple for loop checking the inner product between with  different column-vectors would suffice. 
 
