@@ -10,7 +10,7 @@ We also noticed that the result was very dependent on $\rho_{max}$ especially if
 
 As we can see in Table \ref{tab:time} the CPU time of our Jacobi's method is big compared to armadillo's eigenvalue solver function. We needed 400 mesh points to get a good accuracy for the eigenvalues and if we would have needed more it would have been a very time consuming job.
 
-The number of similarity transformations was big and it give a picture of why the CPU time is big. 
+The number of similarity transformations was big and it give a picture of why the CPU time is big. The similarity transformations increase a lot with the number of mash point, so if the method converged with a lower number of mesh points, it could decrease the CPU time.  
 
 This might indicate that 
 
